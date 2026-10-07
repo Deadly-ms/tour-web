@@ -1,0 +1,10 @@
+{
+  "name": "travel-platform-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Travel & Trip Booking Platform monorepo root",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  }
+}
