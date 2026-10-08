@@ -6,13 +6,23 @@ import { Search, Send, ArrowLeft, Archive, Trash2, MailOpen } from "lucide-react
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
 
 type Reply = { body: string; sentAt: string };
+type Trip = {
+  tourSlug?: string; tourTitle?: string; destination?: string; duration?: string;
+  travelers?: string; travelStyle?: string; travelDate?: string;
+};
 type Msg = {
   _id: string; name: string; email: string; phone?: string; subject?: string;
   message: string; status: "unread" | "read" | "replied" | "archived";
+  type?: "contact" | "trip"; trip?: Trip;
   replies: Reply[]; createdAt: string;
 };
 
 const FILTERS = ["all", "unread", "read", "replied", "archived"] as const;
+const TYPE_FILTERS = [
+  { value: "all", label: "All" },
+  { value: "trip", label: "Trip enquiries" },
+  { value: "contact", label: "Contact" },
+] as const;
 
 const badge: Record<string, string> = {
   unread: "bg-red-50 text-red-700 border-red-200",
@@ -39,6 +49,7 @@ export default function MessagesPanel({
 }) {
   const { getToken } = useAuth();
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
+  const [typeFilter, setTypeFilter] = useState<(typeof TYPE_FILTERS)[number]["value"]>("all");
   const [messages, setMessages] = useState<Msg[]>([]);
   const [active, setActive] = useState<Msg | null>(null);
   const [query, setQuery] = useState("");
@@ -70,7 +81,7 @@ export default function MessagesPanel({
   const load = useCallback(async () => {
     try {
       setError("");
-      const data = await api(`?status=${filter}`);
+      const data = await api(`?status=${filter}&type=${typeFilter}`);
       setMessages(data.messages || []);
       onUnreadChange?.(data.unread || 0);
     } catch (e: any) {
@@ -78,7 +89,7 @@ export default function MessagesPanel({
     } finally {
       setLoading(false);
     }
-  }, [api, filter, onUnreadChange]);
+  }, [api, filter, typeFilter, onUnreadChange]);
 
   // initial load + refresh every 30s so new messages appear
   useEffect(() => {
@@ -160,6 +171,19 @@ export default function MessagesPanel({
               </button>
             ))}
           </div>
+          <div className="flex gap-1.5 flex-wrap">
+            {TYPE_FILTERS.map((t) => (
+              <button
+                key={t.value}
+                onClick={() => setTypeFilter(t.value)}
+                className={`px-3 py-1 text-xs rounded-full border ${
+                  typeFilter === t.value ? "bg-teal-600 text-white border-teal-600" : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <ul className="flex-1 overflow-y-auto divide-y divide-gray-100">
@@ -177,7 +201,14 @@ export default function MessagesPanel({
                   <span className={`truncate text-sm ${m.status === "unread" ? "font-bold" : "font-medium"}`}>{m.name}</span>
                   <span className="text-xs text-gray-400 shrink-0">{when(m.createdAt)}</span>
                 </div>
-                <p className="text-xs text-gray-500 truncate">{m.subject || "No subject"}</p>
+                <p className="text-xs text-gray-500 truncate">
+                  {m.type === "trip" && (
+                    <span className="mr-1.5 text-[10px] px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-200 font-semibold">
+                      Trip
+                    </span>
+                  )}
+                  {m.subject || "No subject"}
+                </p>
                 <div className="flex items-center justify-between mt-1">
                   <p className={`text-sm truncate ${m.status === "unread" ? "text-gray-900" : "text-gray-500"}`}>{m.message}</p>
                   {m.status === "unread" ? (
@@ -248,6 +279,31 @@ export default function MessagesPanel({
             {/* bubbles */}
             <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50/60">
               {active.subject && <p className="text-center text-xs text-gray-400">Subject: {active.subject}</p>}
+
+              {active.type === "trip" && active.trip && (
+                <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-4 text-sm">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-2">Trip details</p>
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
+                    {([
+                      ["Tour", active.trip.tourTitle],
+                      ["Destination", active.trip.destination],
+                      ["Duration", active.trip.duration],
+                      ["Travelers", active.trip.travelers],
+                      ["Style", active.trip.travelStyle],
+                      ["Preferred date", active.trip.travelDate
+                        ? new Date(active.trip.travelDate).toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })
+                        : undefined],
+                    ] as [string, string | undefined][])
+                      .filter(([, v]) => v)
+                      .map(([k, v]) => (
+                        <div key={k}>
+                          <dt className="text-[11px] text-gray-500">{k}</dt>
+                          <dd className="font-medium text-gray-900">{v}</dd>
+                        </div>
+                      ))}
+                  </dl>
+                </div>
+              )}
 
               <div className="max-w-[80%]">
                 <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 text-sm whitespace-pre-wrap">

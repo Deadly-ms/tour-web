@@ -7,7 +7,6 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
 import { clerkMiddleware } from "@clerk/express";
-import contactRoutes from "./routes/contactRoutes";
 
 const app: Application = express();
 
@@ -28,9 +27,6 @@ app.use(clerkMiddleware());
 
 // API Routes
 app.use('/api', apiRoutes);
-
-//contact route
-app.use("/api", contactRoutes);
 
 // 404 Handler for unmatched routes
 app.use(notFoundHandler);

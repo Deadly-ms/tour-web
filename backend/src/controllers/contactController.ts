@@ -17,6 +17,21 @@ const schema = z.object({
   website: z.string().optional(), // honeypot
 });
 
+const enquirySchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().email(),
+  phone: z.string().trim().max(20).optional().or(z.literal("")),
+  destination: z.string().trim().min(1).max(100),
+  tourSlug: z.string().trim().max(120).optional().or(z.literal("")),
+  tourTitle: z.string().trim().max(150).optional().or(z.literal("")),
+  duration: z.string().trim().max(60).optional().or(z.literal("")),
+  travelers: z.string().trim().max(60).optional().or(z.literal("")),
+  travelStyle: z.string().trim().max(60).optional().or(z.literal("")),
+  travelDate: z.string().trim().max(40).optional().or(z.literal("")),
+  notes: z.string().trim().max(2000).optional().or(z.literal("")),
+  website: z.string().optional(), // honeypot
+});
+
 const esc = (s: string = "") =>
   s.replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!)
@@ -51,10 +66,56 @@ export const createMessage = wrap(async (req, res) => {
   res.status(201).json({ success: true });
 });
 
+// PUBLIC - "Plan Your Journey" / tour enquiry
+export const createEnquiry = wrap(async (req, res) => {
+  const parsed = enquirySchema.safeParse(req.body);
+  if (!parsed.success) {
+    const errorMsg = parsed.error.issues?.[0]?.message || "Please check your details.";
+    return res.status(400).json({ message: errorMsg });
+  }
+
+  const { website, notes, name, email, phone, ...trip } = parsed.data;
+  if (website) return res.json({ success: true }); // bot: pretend success
+
+  const label = trip.tourTitle || trip.destination;
+  const doc = await Message.create({
+    name,
+    email,
+    phone,
+    type: "trip",
+    subject: `Trip enquiry: ${label}`,
+    message: notes || "No additional notes. See trip details.",
+    trip,
+  });
+
+  if (process.env.ADMIN_NOTIFY_EMAIL) {
+    const row = (k: string, v?: string | null) =>
+      v ? `<b>${k}:</b> ${esc(v)}<br/>` : "";
+    sendMail({
+      to: process.env.ADMIN_NOTIFY_EMAIL,
+      replyTo: doc.email,
+      subject: `New trip enquiry: ${label}`,
+      html: `<h3>New trip enquiry</h3>
+        <p>${row("Name", doc.name)}${row("Email", doc.email)}${row("Phone", doc.phone)}</p>
+        <p>${row("Tour", trip.tourTitle)}${row("Destination", trip.destination)}${row("Duration", trip.duration)}${row("Travelers", trip.travelers)}${row("Style", trip.travelStyle)}${row("Preferred date", trip.travelDate)}</p>
+        <p>${esc(notes ?? "").replace(/\n/g, "<br/>") || "<i>No additional notes</i>"}</p>`,
+    }).catch((e) => console.error("Admin notify failed:", e.message));
+  }
+
+  res.status(201).json({ success: true });
+});
+
 // ADMIN
 export const listMessages = wrap(async (req, res) => {
-  const status = req.query.status as string | undefined;
-  const filter = status && status !== "all" ? { status } : {};
+  const status = req.query.status;
+  const type = req.query.type;
+  const filter: Record<string, unknown> = {};
+  if (typeof status === "string" && (STATUSES as readonly string[]).includes(status)) {
+    filter.status = status;
+  }
+  // older messages have no "type" field, so "contact" means "anything that isn't a trip"
+  if (type === "trip") filter.type = "trip";
+  else if (type === "contact") filter.type = { $ne: "trip" };
   const [messages, unread] = await Promise.all([
     Message.find(filter).sort({ createdAt: -1 }).limit(200),
     Message.countDocuments({ status: "unread" }),

@@ -3,16 +3,35 @@
 import React, { useState } from 'react';
 import { X, Calendar, Users, MapPin, Compass, CheckCircle2, Sparkles } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
+import { submitTripEnquiry } from '@/services/enquiry.service';
 
 interface PlanTripModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultDestination?: string;
+  /** Set when the modal is opened from a specific tour page */
+  tourSlug?: string;
+  tourTitle?: string;
 }
 
-export function PlanTripModal({ isOpen, onClose, defaultDestination }: PlanTripModalProps) {
+const DESTINATIONS = ['Rajasthan', 'Kerala', 'Ladakh', 'Meghalaya', 'Goa', 'Himachal', 'Custom'];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Tour destinations look like "Rajasthan, India" but the dropdown values are short names
+function matchDestination(d?: string): string {
+  if (!d) return 'Rajasthan';
+  return DESTINATIONS.find((x) => d.toLowerCase().includes(x.toLowerCase())) ?? 'Custom';
+}
+
+export function PlanTripModal({
+  isOpen,
+  onClose,
+  defaultDestination,
+  tourSlug,
+  tourTitle,
+}: PlanTripModalProps) {
   const { showToast } = useToast();
-  const [destination, setDestination] = useState(defaultDestination || 'Rajasthan');
+  const [destination, setDestination] = useState(matchDestination(defaultDestination));
   const [duration, setDuration] = useState('5-7 Days');
   const [travelers, setTravelers] = useState('2 Travelers');
   const [travelStyle, setTravelStyle] = useState('Luxury & Heritage');
@@ -20,22 +39,69 @@ export function PlanTripModal({ isOpen, onClose, defaultDestination }: PlanTripM
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
+  const [travelDate, setTravelDate] = useState('');
+  const [website, setWebsite] = useState(''); // honeypot
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const today = new Date().toISOString().split('T')[0];
+
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setPhone('');
+    setNotes('');
+    setTravelDate('');
+    setWebsite('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email) {
-      showToast('Please enter your name and email to proceed.', 'error');
+    if (isSubmitting) return;
+
+    if (name.trim().length < 2) {
+      showToast('Please enter your full name (at least 2 characters).', 'error');
       return;
     }
-    setIsSubmitted(true);
-    showToast('Your custom journey plan request has been received! Our travel specialist will reach out shortly.', 'success');
-    setTimeout(() => {
-      setIsSubmitted(false);
-      onClose();
-    }, 2000);
+    if (!EMAIL_RE.test(email.trim())) {
+      showToast('Please enter a valid email address.', 'error');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await submitTripEnquiry({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        destination,
+        tourSlug,
+        tourTitle,
+        duration,
+        travelers,
+        travelStyle,
+        travelDate: travelDate || undefined,
+        notes: notes.trim() || undefined,
+        website: website || undefined,
+      });
+
+      setIsSubmitted(true);
+      showToast('Your journey request has been received! Our travel specialist will reach out shortly.', 'success');
+      setTimeout(() => {
+        setIsSubmitted(false);
+        resetForm();
+        onClose();
+      }, 2500);
+    } catch (err) {
+      showToast(
+        err instanceof Error ? err.message : 'Something went wrong while sending your request.',
+        'error'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -75,6 +141,16 @@ export function PlanTripModal({ isOpen, onClose, defaultDestination }: PlanTripM
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+              {/* Honeypot field for bot protection */}
+              <input
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                className="hidden"
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
@@ -146,6 +222,19 @@ export function PlanTripModal({ isOpen, onClose, defaultDestination }: PlanTripM
                 </div>
               </div>
 
+              <div>
+                <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-[#18281d]" /> Preferred Travel Date (Optional)
+                </label>
+                <input
+                  type="date"
+                  min={today}
+                  value={travelDate}
+                  onChange={(e) => setTravelDate(e.target.value)}
+                  className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                />
+              </div>
+
               <div className="pt-2 border-t border-[#e8e4dc] grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-stone-700 font-medium mb-1.5">Your Full Name</label>
@@ -204,10 +293,20 @@ export function PlanTripModal({ isOpen, onClose, defaultDestination }: PlanTripM
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-full bg-[#18281d] text-white hover:bg-[#253d2c] transition-colors font-medium flex items-center gap-2 shadow-md"
+                  disabled={isSubmitting}
+                  className="px-6 py-2.5 rounded-full bg-[#18281d] text-white hover:bg-[#253d2c] transition-colors font-medium flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span>Request Custom Plan</span>
-                  <span>→</span>
+                  {isSubmitting ? (
+                    <>
+                      <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Request Custom Plan</span>
+                      <span>→</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>

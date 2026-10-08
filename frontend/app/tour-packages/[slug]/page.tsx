@@ -59,9 +59,11 @@ export default function TourDetailsPage({ params }: PageProps) {
 
       {/* Plan Trip / Booking Modal */}
       <PlanTripModal
-        isOpen={isPlanModalOpen}
-        onClose={() => setIsPlanModalOpen(false)}
-        defaultDestination={pkg.destination}
+      isOpen={isPlanModalOpen}
+      onClose={() => setIsPlanModalOpen(false)}
+      defaultDestination={pkg.destination}
+      tourSlug={pkg.slug}
+      tourTitle={pkg.title}
       />
     </main>
   );

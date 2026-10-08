@@ -11,6 +11,7 @@ const limiter = rateLimit({
 });
 
 router.post("/contact", limiter, c.createMessage);
+router.post("/enquiries", limiter, c.createEnquiry);
 
 router.use("/admin/messages", requireAdmin);
 router.get("/admin/messages", c.listMessages);
