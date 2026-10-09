@@ -15,7 +15,7 @@ export function AboutHero({
   titleLine1 = 'MORE THAN',
   titleLine2 = 'A JOURNEY.',
   subtitle = 'We believe travel should change the way you see the world.',
-  image = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80',
+  image = "/img2.jpg",
 }: AboutHeroProps) {
   const handleScrollDown = () => {
     const philosophyEl = document.getElementById('philosophy-section');
@@ -32,7 +32,7 @@ export function AboutHero({
           <div className="lg:col-span-6 space-y-6 sm:space-y-8">
             <div className="space-y-4">
               <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
-                ABOUT WANDERLY
+                ABOUT TRACK YOUR TRIP
               </span>
               <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#18281d] leading-[1.08] tracking-tight">
                 {titleLine1} <br />

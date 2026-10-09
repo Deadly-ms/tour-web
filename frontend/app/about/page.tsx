@@ -7,9 +7,9 @@ import { MeetTheTeam } from '@/components/wanderly/about/MeetTheTeam';
 import { AboutCTA } from '@/components/wanderly/about/AboutCTA';
 
 export const metadata: Metadata = {
-  title: 'About Us | Wanderly — More Than A Journey',
+  title: 'About Us | Track your trip — More Than A Journey',
   description:
-    'Learn about Wanderly: our philosophy of slow travel, curated storytelling, sustainable exploration, and the passionate team crafting your journeys.',
+    'Learn about Track your trip: our philosophy of slow travel, curated storytelling, sustainable exploration, and the passionate team crafting your journeys.',
 };
 
 export default function AboutPage() {

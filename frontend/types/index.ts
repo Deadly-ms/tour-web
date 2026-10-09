@@ -24,10 +24,11 @@ export interface ItineraryDay {
 
 export interface TourPackage {
   id: string;
+  _id?: string;
   slug: string;
   title: string;
   destination: string;
-  category: 'Hill Station' | 'Heritage & Temples' | 'Coastal & Backwaters' | 'Wildlife & Nature' | 'Honeymoon' | 'Adventure';
+  category: 'Hill Station' | 'Heritage & Temples' | 'Coastal & Backwaters' | 'Wildlife & Nature' | 'Honeymoon' | 'Adventure' | string;
   duration: string;
   durationDays: number;
   groupSize: string;
@@ -44,10 +45,13 @@ export interface TourPackage {
   itinerary: ItineraryDay[];
   featured?: boolean;
   bestSeller?: boolean;
+  isPublished?: boolean;
   tags?: string[];
   bestTime?: string;
   tripType?: string;
   startEnd?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Testimonial {

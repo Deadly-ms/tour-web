@@ -5,9 +5,9 @@ import { ServicesShowcase } from '@/components/wanderly/services/ServicesShowcas
 import { ServicesCTA } from '@/components/wanderly/services/ServicesCTA';
 
 export const metadata: Metadata = {
-  title: 'Services | Wanderly — Everything You Need. Nothing You Don’t.',
+  title: 'Services | Track your trip — Everything You Need. Nothing You Don’t.',
   description:
-    'From bespoke itinerary planning to private chauffeured tours, boutique hotel curation, and authentic cultural immersion, discover Wanderly services.',
+    'From bespoke itinerary planning to private chauffeured tours, boutique hotel curation, and authentic cultural immersion, discover Track your trip services.',
 };
 
 export default function ServicesPage() {

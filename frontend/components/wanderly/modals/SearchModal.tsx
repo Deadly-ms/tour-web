@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, X, ArrowRight, MapPin, Compass } from 'lucide-react';
+import { useEffect } from 'react';
 import { MOCK_TOUR_PACKAGES } from '@/lib/mock-data/tour-packages';
+import { getAllTourPackages } from '@/services/tour.service';
+import { TourPackage } from '@/types';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -13,16 +16,34 @@ interface SearchModalProps {
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
+  const [allPackages, setAllPackages] = useState<TourPackage[]>(MOCK_TOUR_PACKAGES);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const live = await getAllTourPackages();
+        if (isMounted && live && live.length > 0) {
+          setAllPackages(live);
+        }
+      } catch (err) {
+        console.error('Failed to load packages in search:', err);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (!isOpen) return null;
 
   const filtered = query.trim()
-    ? MOCK_TOUR_PACKAGES.filter((p) =>
+    ? allPackages.filter((p) =>
         p.title.toLowerCase().includes(query.toLowerCase()) ||
         p.destination.toLowerCase().includes(query.toLowerCase()) ||
         (p.tags && p.tags.some((t) => t.toLowerCase().includes(query.toLowerCase())))
       )
-    : MOCK_TOUR_PACKAGES.slice(0, 4);
+    : allPackages.slice(0, 4);
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">

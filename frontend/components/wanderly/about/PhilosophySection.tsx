@@ -17,7 +17,7 @@ interface PhilosophySectionProps {
 export function PhilosophySection({
   tag = 'OUR PHILOSOPHY',
   title = 'Travel slowly.\nLook closer.\nStay curious.',
-  description = 'At Wanderly, we believe that travel is not just about visiting new places, but about feeling, learning and connecting. We create meaningful journeys that bring you closer to nature, people and yourself.',
+  description = 'At Track your trip, we believe that travel is not just about visiting new places, but about feeling, learning and connecting. We create meaningful journeys that bring you closer to nature, people and yourself.',
   image = 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80',
   buttonText = 'Our Story',
   buttonHref = '/contact',

@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PackagesHero } from '@/components/wanderly/packages/PackagesHero';
 import { PackagesFilterBar } from '@/components/wanderly/packages/PackagesFilterBar';
 import { PackageGrid } from '@/components/wanderly/packages/PackageGrid';
+import { getAllTourPackages } from '@/services/tour.service';
+import { TourPackage } from '@/types';
 import { MOCK_TOUR_PACKAGES } from '@/lib/mock-data/tour-packages';
 
 function TourPackagesContent() {
@@ -12,13 +14,32 @@ function TourPackagesContent() {
   const initialDestination = searchParams.get('destination') || 'All';
   const initialCategory = searchParams.get('category') || 'All';
 
+  const [packages, setPackages] = useState<TourPackage[]>(MOCK_TOUR_PACKAGES);
   const [destination, setDestination] = useState(initialDestination);
   const [duration, setDuration] = useState('All');
   const [travelStyle, setTravelStyle] = useState(initialCategory);
   const [sortBy, setSortBy] = useState('popular');
 
+  // Load packages dynamically from API
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const livePackages = await getAllTourPackages();
+        if (isMounted && livePackages && livePackages.length > 0) {
+          setPackages(livePackages);
+        }
+      } catch (err) {
+        console.error('Failed to load tour packages from API:', err);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const filteredPackages = useMemo(() => {
-    let list = [...MOCK_TOUR_PACKAGES];
+    let list = [...packages];
 
     // Filter destination
     if (destination !== 'All') {
@@ -58,7 +79,7 @@ function TourPackagesContent() {
     }
 
     return list;
-  }, [destination, duration, travelStyle, sortBy]);
+  }, [packages, destination, duration, travelStyle, sortBy]);
 
   return (
     <main className="flex flex-col w-full overflow-hidden">

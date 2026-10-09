@@ -20,17 +20,20 @@
   "license": "ISC",
   "dependencies": {
     "@clerk/express": "^2.1.76",
+    "cloudinary": "^2.11.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^8.7.1",
     "mongoose": "^8.9.5",
+    "multer": "^2.4.0",
     "nodemailer": "^10.0.15",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.25",
+    "@types/multer": "^2.3.0",
     "@types/node": "^20.17.14",
     "@types/nodemailer": "^8.0.2",
     "tsx": "^4.19.2",

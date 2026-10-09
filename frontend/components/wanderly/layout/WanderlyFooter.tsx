@@ -42,7 +42,7 @@ export function WanderlyFooter() {
                 <circle cx="14" cy="4" r="1.5" fill="currentColor" />
               </svg>
               <span className="font-serif text-2xl font-normal tracking-tight text-[#18281d]">
-                Wanderly
+                Track your trip
               </span>
             </Link>
             <p className="text-xs text-stone-500 max-w-xs font-light leading-relaxed">
@@ -182,7 +182,7 @@ export function WanderlyFooter() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-500">
           <div>
-            © 2026 Wanderly. All rights reserved.
+            © 2026 Track your trip. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="hover:text-stone-800 transition">

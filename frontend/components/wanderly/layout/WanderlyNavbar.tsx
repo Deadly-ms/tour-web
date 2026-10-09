@@ -83,7 +83,7 @@ export function WanderlyNavbar() {
                   isTransparent ? 'text-white' : 'text-[#18281d]'
                 }`}
               >
-                Wanderly
+                Track your trip
               </span>
             </Link>
 

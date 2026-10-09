@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState, use } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { notFound } from 'next/navigation';
+import { getTourPackageBySlug } from '@/services/tour.service';
 import { MOCK_TOUR_PACKAGES } from '@/lib/mock-data/tour-packages';
+import { TourPackage } from '@/types';
 import { TourDetailsHero } from '@/components/wanderly/tour-details/TourDetailsHero';
 import { TourDetailsTabs } from '@/components/wanderly/tour-details/TourDetailsTabs';
 import { TourOverviewSection } from '@/components/wanderly/tour-details/TourOverviewSection';
@@ -21,13 +23,55 @@ export default function TourDetailsPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
-  // Find the package by slug, default to Rajasthan if not matched or 'rajasthan-royal-escape'
-  const pkg =
+  // Initial fallback to mock data while loading
+  const initialPkg =
     MOCK_TOUR_PACKAGES.find((p) => p.slug === resolvedParams.slug) ||
     MOCK_TOUR_PACKAGES[0];
 
-  if (!pkg) {
+  const [pkg, setPkg] = useState<TourPackage | null>(initialPkg);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const liveTour = await getTourPackageBySlug(resolvedParams.slug);
+        if (isMounted) {
+          if (liveTour) {
+            setPkg(liveTour);
+          } else {
+            // If not found in API or mock
+            const fallback = MOCK_TOUR_PACKAGES.find((p) => p.slug === resolvedParams.slug);
+            if (fallback) {
+              setPkg(fallback);
+            } else {
+              setPkg(null);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load tour by slug:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [resolvedParams.slug]);
+
+  if (!loading && !pkg) {
     notFound();
+  }
+
+  if (!pkg) {
+    return (
+      <div className="min-h-screen bg-[#fcfbfa] flex items-center justify-center">
+        <div className="animate-pulse text-stone-400 font-serif text-lg">
+          Loading itinerary...
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -59,11 +103,11 @@ export default function TourDetailsPage({ params }: PageProps) {
 
       {/* Plan Trip / Booking Modal */}
       <PlanTripModal
-      isOpen={isPlanModalOpen}
-      onClose={() => setIsPlanModalOpen(false)}
-      defaultDestination={pkg.destination}
-      tourSlug={pkg.slug}
-      tourTitle={pkg.title}
+        isOpen={isPlanModalOpen}
+        onClose={() => setIsPlanModalOpen(false)}
+        defaultDestination={pkg.destination}
+        tourSlug={pkg.slug}
+        tourTitle={pkg.title}
       />
     </main>
   );

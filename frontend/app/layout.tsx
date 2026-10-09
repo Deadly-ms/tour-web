@@ -19,15 +19,15 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://wanderly-travel.example.com'),
+  metadataBase: new URL('https://trackyourtrip-travel.example.com'),
   title: {
-    default: 'Wanderly | The World Beyond — Curated Journeys & Travel',
-    template: '%s | Wanderly',
+    default: 'Track your trip | The World Beyond — Curated Journeys & Travel',
+    template: '%s | Track your trip',
   },
   description:
     'Curated journeys to extraordinary destinations, crafted for unforgettable experiences. Explore Rajasthan, Kerala, Ladakh, Meghalaya, and bespoke slow travel getaways.',
   keywords: [
-    'Wanderly travel',
+    'Track your trip travel',
     'curated journeys',
     'luxury tour packages',
     'Rajasthan royal tour',
@@ -36,19 +36,19 @@ export const metadata: Metadata = {
     'slow travel',
     'bespoke itineraries',
   ],
-  authors: [{ name: 'Wanderly Travel Specialists' }],
+  authors: [{ name: 'Track your trip Travel Specialists' }],
   openGraph: {
-    title: 'Wanderly | The World Beyond — Curated Journeys',
+    title: 'Track your trip | The World Beyond — Curated Journeys',
     description:
       'Curated journeys to extraordinary destinations, crafted for unforgettable experiences.',
-    url: 'https://wanderly-travel.example.com',
-    siteName: 'Wanderly',
+    url: 'https://trackyourtrip-travel.example.com',
+    siteName: 'Track your trip',
     images: [
       {
         url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
         width: 1200,
         height: 630,
-        alt: 'Wanderly Curated Journeys',
+        alt: 'Track your trip Curated Journeys',
       },
     ],
     locale: 'en_US',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Wanderly | Curated Journeys',
+    title: 'Track your trip | Curated Journeys',
     description: 'Explore handpicked destinations and bespoke travel itineraries.',
     images: ['https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'],
   },

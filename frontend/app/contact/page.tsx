@@ -115,7 +115,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-serif text-sm font-medium text-stone-900">Email Inquiries</h4>
-                  <p className="text-xs text-stone-500 font-light mt-0.5">concierge@wanderly.com</p>
+                  <p className="text-xs text-stone-500 font-light mt-0.5">concierge@trackyourtrip.com</p>
                 </div>
               </div>
 

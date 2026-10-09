@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
-import { MOCK_TOUR_PACKAGES } from '@/lib/mock-data/tour-packages';
+import { getAllTourPackages } from '@/services/tour.service';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://tourplatform.example.com';
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trackyourtrip.example.com';
 
   const staticRoutes: MetadataRoute.Sitemap = [
     '',
@@ -17,8 +17,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === '' ? 1 : 0.8,
   }));
 
-  const tourRoutes: MetadataRoute.Sitemap = MOCK_TOUR_PACKAGES.map((pkg) => ({
-    url: `${baseUrl}/tour-packages#${pkg.slug}`,
+  const packages = await getAllTourPackages();
+
+  const tourRoutes: MetadataRoute.Sitemap = packages.map((pkg) => ({
+    url: `${baseUrl}/tour-packages/${pkg.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.9,

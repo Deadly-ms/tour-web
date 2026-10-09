@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Clock, MapPin, Sparkles } from 'lucide-react';
 import { TourPackage } from '@/types';
+import { getFeaturedTourPackages } from '@/services/tour.service';
 import { MOCK_TOUR_PACKAGES } from '@/lib/mock-data/tour-packages';
 
 interface CuratedPackagesProps {
@@ -18,10 +19,34 @@ export function CuratedPackages({
   title = 'Curated Tour Packages',
   tag = 'FEATURED JOURNEYS',
   description = 'Thoughtfully designed itineraries for every kind of traveller — from solo explorers to family getaways.',
-  packages,
+  packages: propPackages,
 }: CuratedPackagesProps) {
-  // Grab the first 3 prominent packages
-  const displayPackages = packages || MOCK_TOUR_PACKAGES.slice(0, 3);
+  const [packages, setPackages] = useState<TourPackage[]>(
+    propPackages || MOCK_TOUR_PACKAGES.slice(0, 3)
+  );
+
+  useEffect(() => {
+    if (propPackages) {
+      setPackages(propPackages);
+      return;
+    }
+
+    let isMounted = true;
+    (async () => {
+      try {
+        const featured = await getFeaturedTourPackages();
+        if (isMounted && featured && featured.length > 0) {
+          setPackages(featured.slice(0, 3));
+        }
+      } catch (err) {
+        console.error('Failed to load featured packages:', err);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [propPackages]);
 
   return (
     <section className="py-20 sm:py-24 bg-[#faf8f5] border-y border-[#e8e4dc]/70">
@@ -52,9 +77,9 @@ export function CuratedPackages({
 
         {/* 3 Packages Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {displayPackages.map((pkg) => (
+          {packages.map((pkg) => (
             <Link
-              key={pkg.id}
+              key={pkg.id || pkg._id || pkg.slug}
               href={`/tour-packages/${pkg.slug}`}
               className="group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-[#e8e4dc] hover:border-[#cfc9bc] transition-all duration-300 hover:shadow-lg flex flex-col"
             >
