@@ -20,6 +20,15 @@ export interface ItineraryDay {
   description: string;
   meals?: string;
   accommodation?: string;
+  accommodationImage?: string;
+}
+
+export interface HotelItem {
+  name: string;
+  location?: string;
+  category?: string;
+  image?: string;
+  rating?: number;
 }
 
 export interface TourPackage {
@@ -43,6 +52,7 @@ export interface TourPackage {
   inclusions: string[];
   exclusions: string[];
   itinerary: ItineraryDay[];
+  hotels?: HotelItem[];
   featured?: boolean;
   bestSeller?: boolean;
   isPublished?: boolean;

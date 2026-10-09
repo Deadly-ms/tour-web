@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { X, Calendar, Users, MapPin, Compass, CheckCircle2, Sparkles } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
 import { submitTripEnquiry } from '@/services/enquiry.service';
+import { getAllTourPackages } from '@/services/tour.service';
+import { MOCK_TOUR_PACKAGES } from '@/lib/mock-data/tour-packages';
+import { TourPackage } from '@/types';
 
 interface PlanTripModalProps {
   isOpen: boolean;
@@ -14,13 +17,20 @@ interface PlanTripModalProps {
   tourTitle?: string;
 }
 
-const DESTINATIONS = ['Rajasthan', 'Kerala', 'Ladakh', 'Meghalaya', 'Goa', 'Himachal', 'Custom'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Tour destinations look like "Rajasthan, India" but the dropdown values are short names
-function matchDestination(d?: string): string {
-  if (!d) return 'Rajasthan';
-  return DESTINATIONS.find((x) => d.toLowerCase().includes(x.toLowerCase())) ?? 'Custom';
+function cleanDestName(dest?: string): string {
+  if (!dest) return '';
+  return dest.replace(/, India$/i, '').trim();
+}
+
+function formatPackageOptionLabel(pkg: { title: string; destination?: string }): string {
+  const clean = cleanDestName(pkg.destination);
+  if (!clean) return pkg.title;
+  if (pkg.title.toLowerCase().trim() === clean.toLowerCase().trim()) {
+    return clean;
+  }
+  return `${clean} (${pkg.title})`;
 }
 
 export function PlanTripModal({
@@ -31,7 +41,11 @@ export function PlanTripModal({
   tourTitle,
 }: PlanTripModalProps) {
   const { showToast } = useToast();
-  const [destination, setDestination] = useState(matchDestination(defaultDestination));
+  const [packages, setPackages] = useState<TourPackage[]>(MOCK_TOUR_PACKAGES);
+
+  const [selectedSlug, setSelectedSlug] = useState<string>(tourSlug || 'custom');
+  const [destination, setDestination] = useState<string>(defaultDestination || 'Custom / Multi-City');
+  const [currentTourTitle, setCurrentTourTitle] = useState<string>(tourTitle || '');
   const [duration, setDuration] = useState('5-7 Days');
   const [travelers, setTravelers] = useState('2 Travelers');
   const [travelStyle, setTravelStyle] = useState('Luxury & Heritage');
@@ -44,6 +58,81 @@ export function PlanTripModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Fetch dynamic packages from API so admin-created packages appear
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const live = await getAllTourPackages();
+        if (isMounted && live && live.length > 0) {
+          setPackages(live);
+        }
+      } catch (err) {
+        console.warn('[PlanTripModal] Failed to load tours from API:', err);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Merge packages with props if opened for a newly created package
+  const effectivePackages = useMemo(() => {
+    const list = [...packages];
+    if (tourSlug && !list.some((p) => p.slug === tourSlug)) {
+      list.unshift({
+        id: `custom-${tourSlug}`,
+        slug: tourSlug,
+        title: tourTitle || tourSlug,
+        destination: defaultDestination || '',
+        category: 'Private Tour',
+        duration: '',
+        durationDays: 5,
+        groupSize: 'Private',
+        rating: 5,
+        reviewsCount: 1,
+        price: 0,
+        heroImage: '',
+        gallery: [],
+        overview: '',
+        inclusions: [],
+        exclusions: [],
+        itinerary: [],
+      });
+    }
+    return list;
+  }, [packages, tourSlug, tourTitle, defaultDestination]);
+
+  // Synchronize selection whenever the modal opens or props change
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (tourSlug) {
+      setSelectedSlug(tourSlug);
+      if (tourTitle) setCurrentTourTitle(tourTitle);
+      if (defaultDestination) setDestination(defaultDestination);
+    } else if (defaultDestination) {
+      const match = effectivePackages.find(
+        (p) =>
+          p.destination.toLowerCase().includes(defaultDestination.toLowerCase()) ||
+          defaultDestination.toLowerCase().includes(cleanDestName(p.destination).toLowerCase())
+      );
+      if (match) {
+        setSelectedSlug(match.slug);
+        setCurrentTourTitle(match.title);
+        setDestination(match.destination);
+      } else {
+        setSelectedSlug('custom');
+        setCurrentTourTitle('');
+        setDestination(defaultDestination);
+      }
+    } else {
+      setSelectedSlug('custom');
+      setCurrentTourTitle('');
+      setDestination('Custom / Multi-City');
+    }
+  }, [isOpen, tourSlug, tourTitle, defaultDestination, effectivePackages]);
+
   if (!isOpen) return null;
 
   const today = new Date().toISOString().split('T')[0];
@@ -55,6 +144,20 @@ export function PlanTripModal({
     setNotes('');
     setTravelDate('');
     setWebsite('');
+  };
+
+  const handlePackageChange = (val: string) => {
+    setSelectedSlug(val);
+    if (val === 'custom') {
+      setCurrentTourTitle('');
+      setDestination('Custom / Multi-City');
+    } else {
+      const pkg = effectivePackages.find((p) => p.slug === val);
+      if (pkg) {
+        setCurrentTourTitle(pkg.title);
+        setDestination(pkg.destination);
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,9 +179,9 @@ export function PlanTripModal({
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim() || undefined,
-        destination,
-        tourSlug,
-        tourTitle,
+        destination: destination || 'Custom / Multi-City',
+        tourSlug: selectedSlug !== 'custom' ? selectedSlug : undefined,
+        tourTitle: currentTourTitle || undefined,
         duration,
         travelers,
         travelStyle,
@@ -140,6 +243,24 @@ export function PlanTripModal({
               </p>
             </div>
 
+            {/* Selected Package Callout */}
+            {currentTourTitle && (
+              <div className="mb-5 p-3.5 bg-[#f7f5f0] border border-[#e8dfd5] rounded-2xl flex items-center justify-between text-xs animate-in fade-in duration-200">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+                  <div>
+                    <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400">Selected Tour Package</p>
+                    <p className="font-serif text-base font-medium text-[#18281d]">{currentTourTitle}</p>
+                  </div>
+                </div>
+                {destination && (
+                  <span className="text-[11px] font-medium text-[#c58b59] bg-white border border-[#e8dfd5] px-3 py-1 rounded-full shadow-sm shrink-0">
+                    {cleanDestName(destination) || destination}
+                  </span>
+                )}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
               {/* Honeypot field for bot protection */}
               <input
@@ -154,21 +275,32 @@ export function PlanTripModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#18281d]" /> Preferred Destination
+                    <MapPin className="w-3.5 h-3.5 text-[#18281d]" /> Preferred Destination / Package
                   </label>
                   <select
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
+                    value={selectedSlug}
+                    onChange={(e) => handlePackageChange(e.target.value)}
                     className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
                   >
-                    <option value="Rajasthan">Rajasthan (Forts & Royal Palaces)</option>
-                    <option value="Kerala">Kerala (Backwaters & Nature)</option>
-                    <option value="Ladakh">Ladakh (Himalayan High Passes)</option>
-                    <option value="Meghalaya">Meghalaya (Waterfalls & Living Roots)</option>
-                    <option value="Goa">Goa (Coasts & Heritage)</option>
-                    <option value="Himachal">Himachal Pradesh (Alpine Trails)</option>
-                    <option value="Custom">Custom / Multi-City</option>
+                    <option value="custom">Custom / Multi-City (Bespoke Itinerary)</option>
+                    <optgroup label="Available Tour Packages">
+                      {effectivePackages.map((p) => (
+                        <option key={p.slug || p.id} value={p.slug}>
+                          {formatPackageOptionLabel(p)}
+                        </option>
+                      ))}
+                    </optgroup>
                   </select>
+
+                  {selectedSlug === 'custom' && (
+                    <input
+                      type="text"
+                      placeholder="Specific destination (e.g. Varanasi, Kashmir, Multi-City)"
+                      value={destination === 'Custom / Multi-City' ? '' : destination}
+                      onChange={(e) => setDestination(e.target.value.trim() ? e.target.value : 'Custom / Multi-City')}
+                      className="mt-2 w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2 text-stone-800 text-xs focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                    />
+                  )}
                 </div>
 
                 <div>

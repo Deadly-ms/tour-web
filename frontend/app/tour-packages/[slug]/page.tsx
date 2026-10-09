@@ -25,8 +25,7 @@ export default function TourDetailsPage({ params }: PageProps) {
 
   // Initial fallback to mock data while loading
   const initialPkg =
-    MOCK_TOUR_PACKAGES.find((p) => p.slug === resolvedParams.slug) ||
-    MOCK_TOUR_PACKAGES[0];
+    MOCK_TOUR_PACKAGES.find((p) => p.slug === resolvedParams.slug) || null;
 
   const [pkg, setPkg] = useState<TourPackage | null>(initialPkg);
   const [loading, setLoading] = useState(true);
@@ -80,7 +79,17 @@ export default function TourDetailsPage({ params }: PageProps) {
       <TourDetailsHero pkg={pkg} onPlanClick={() => setIsPlanModalOpen(true)} />
 
       {/* 2. STICKY TABS NAVIGATION */}
-      <TourDetailsTabs />
+      <TourDetailsTabs
+        hasHotels={Boolean(
+          (pkg.hotels && pkg.hotels.length > 0) ||
+          (pkg.itinerary &&
+            pkg.itinerary.some(
+              (d) =>
+                d.accommodation &&
+                !d.accommodation.match(/^(none|n\/a|selected hotel|tba)$/i)
+            ))
+        )}
+      />
 
       {/* 3. SPLIT MAIN CONTENT */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-10 sm:pt-14 w-full">
@@ -90,8 +99,8 @@ export default function TourDetailsPage({ params }: PageProps) {
             <TourOverviewSection pkg={pkg} />
             <TourItinerarySection pkg={pkg} />
             <TourInclusionsSection pkg={pkg} />
-            <TourHotelsSection />
-            <TourFAQSection />
+            <TourHotelsSection pkg={pkg} />
+            <TourFAQSection pkg={pkg} />
           </div>
 
           {/* Right Column: Sticky Booking Card (4 cols) */}

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { TourPackage } from '@/types';
 
 interface FAQItem {
   question: string;
@@ -12,7 +13,7 @@ const DEFAULT_FAQS: FAQItem[] = [
   {
     question: 'Can this itinerary be fully customized?',
     answer:
-      'Yes, absolutely. All our journeys are 100% tailor-made. You can add extra days in Jodhpur or Udaipur, upgrade your suite, request specific dietary arrangements, or include special monument permits.',
+      'Yes, absolutely. All our journeys are 100% tailor-made. You can add extra days, upgrade your suite, request specific dietary arrangements, or include special permits.',
   },
   {
     question: 'What type of conveyance and vehicle is provided?',
@@ -27,12 +28,40 @@ const DEFAULT_FAQS: FAQItem[] = [
   {
     question: 'Are monument entrance passes and guides included?',
     answer:
-      'Yes, all prime monument tickets and certified local architectural historians for Amber Fort, Mehrangarh, and Udaipur City Palace are included.',
+      'Yes, all prime monument tickets and certified local architectural historians and guides are included.',
   },
 ];
 
-export function TourFAQSection({ faqs = DEFAULT_FAQS }: { faqs?: FAQItem[] }) {
+interface TourFAQSectionProps {
+  pkg?: TourPackage;
+  faqs?: FAQItem[];
+}
+
+export function TourFAQSection({ pkg, faqs: propFaqs }: TourFAQSectionProps) {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+
+  const destination = pkg?.destination || 'your destination';
+
+  const dynamicFaqs: FAQItem[] = propFaqs || [
+    {
+      question: 'Can this itinerary be fully customized?',
+      answer: `Yes, absolutely. All our journeys are 100% tailor-made. You can add extra days in ${destination}, upgrade your suite, request specific dietary arrangements, or include special experiences.`,
+    },
+    {
+      question: 'What type of conveyance and vehicle is provided?',
+      answer:
+        'You are provided a dedicated, private air-conditioned vehicle (Toyota Innova Crysta or luxury sedan/SUV) with a seasoned chauffeur who remains with you throughout the circuit.',
+    },
+    {
+      question: 'What is the cancellation and refund policy?',
+      answer:
+        'We offer flexible bookings with free date rescheduling up to 14 days before your departure date. Full details are outlined in your personalized booking confirmation.',
+    },
+    {
+      question: 'Are monument entrance passes and guides included?',
+      answer: `Yes, all prime tickets and certified local guides for key landmarks across ${destination} are included.`,
+    },
+  ];
 
   return (
     <section id="faq" className="space-y-6 pt-10 border-t border-[#e8e4dc]">
@@ -41,7 +70,7 @@ export function TourFAQSection({ faqs = DEFAULT_FAQS }: { faqs?: FAQItem[] }) {
       </h2>
 
       <div className="space-y-3">
-        {faqs.map((faq, idx) => {
+        {dynamicFaqs.map((faq, idx) => {
           const isOpen = openIdx === idx;
           return (
             <div

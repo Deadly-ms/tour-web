@@ -145,6 +145,7 @@ export const createTour = async (
       inclusions,
       exclusions,
       itinerary,
+      hotels,
       featured,
       bestSeller,
       isPublished,
@@ -202,6 +203,7 @@ export const createTour = async (
       inclusions: Array.isArray(inclusions) ? inclusions.filter(Boolean) : [],
       exclusions: Array.isArray(exclusions) ? exclusions.filter(Boolean) : [],
       itinerary: Array.isArray(itinerary) ? itinerary : [],
+      hotels: Array.isArray(hotels) ? hotels : [],
       featured: Boolean(featured),
       bestSeller: Boolean(bestSeller),
       isPublished: isPublished !== undefined ? Boolean(isPublished) : true,
@@ -270,6 +272,7 @@ export const updateTour = async (
       inclusions,
       exclusions,
       itinerary,
+      hotels,
       featured,
       bestSeller,
       isPublished,
@@ -295,6 +298,7 @@ export const updateTour = async (
     if (inclusions !== undefined) tour.inclusions = Array.isArray(inclusions) ? inclusions.filter(Boolean) : [];
     if (exclusions !== undefined) tour.exclusions = Array.isArray(exclusions) ? exclusions.filter(Boolean) : [];
     if (itinerary !== undefined) tour.itinerary = Array.isArray(itinerary) ? itinerary : [];
+    if (hotels !== undefined) tour.hotels = Array.isArray(hotels) ? hotels : [];
     if (featured !== undefined) tour.featured = Boolean(featured);
     if (bestSeller !== undefined) tour.bestSeller = Boolean(bestSeller);
     if (isPublished !== undefined) tour.isPublished = Boolean(isPublished);

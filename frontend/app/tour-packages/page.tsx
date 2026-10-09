@@ -81,6 +81,19 @@ function TourPackagesContent() {
     return list;
   }, [packages, destination, duration, travelStyle, sortBy]);
 
+  const availableDestinations = useMemo(() => {
+    const list: string[] = [];
+    packages.forEach((p) => {
+      if (p.destination) {
+        const clean = p.destination.split(',')[0].trim();
+        if (clean && !list.some((d) => d.toLowerCase() === clean.toLowerCase())) {
+          list.push(clean);
+        }
+      }
+    });
+    return list;
+  }, [packages]);
+
   return (
     <main className="flex flex-col w-full overflow-hidden">
       {/* 1. HERO SECTION: Golden sunset desert dunes */}
@@ -94,6 +107,7 @@ function TourPackagesContent() {
         setDuration={setDuration}
         travelStyle={travelStyle}
         setTravelStyle={setTravelStyle}
+        availableDestinations={availableDestinations}
       />
 
       {/* 3. PACKAGES GRID & PAGINATION */}

@@ -68,9 +68,24 @@ export function TourItinerarySection({ pkg }: TourItinerarySectionProps) {
                   <div className="px-5 pb-5 pt-1 border-t border-stone-100 text-xs sm:text-sm text-stone-600 font-light leading-relaxed space-y-2">
                     <p>{item.description}</p>
                     {(item.meals || item.accommodation) && (
-                      <div className="pt-2 flex flex-wrap gap-3 text-[11px] text-stone-400 font-normal">
+                      <div className="pt-2 flex flex-wrap items-center gap-3 text-[11px] text-stone-500 font-normal">
                         {item.meals && <span>🍽️ Meals: {item.meals}</span>}
-                        {item.accommodation && <span>🏨 Stay: {item.accommodation}</span>}
+                        {item.accommodation && (
+                          <span className="inline-flex items-center gap-1.5 bg-stone-100/90 px-2 py-0.5 rounded-md text-stone-700">
+                            <span>🏨 Stay: {item.accommodation}</span>
+                            {item.accommodationImage && (
+                              <span className="relative w-5 h-5 rounded overflow-hidden shrink-0 inline-block border border-stone-300">
+                                <Image
+                                  src={item.accommodationImage}
+                                  alt={item.accommodation}
+                                  fill
+                                  unoptimized
+                                  className="object-cover"
+                                />
+                              </span>
+                            )}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>

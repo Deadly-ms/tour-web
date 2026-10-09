@@ -10,6 +10,7 @@ interface PackagesFilterBarProps {
   setDuration: (val: string) => void;
   travelStyle: string;
   setTravelStyle: (val: string) => void;
+  availableDestinations?: string[];
   onSearch?: () => void;
 }
 
@@ -20,6 +21,7 @@ export function PackagesFilterBar({
   setDuration,
   travelStyle,
   setTravelStyle,
+  availableDestinations,
   onSearch,
 }: PackagesFilterBarProps) {
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,12 +48,22 @@ export function PackagesFilterBar({
               className="w-full bg-transparent text-xs font-medium text-stone-800 focus:outline-none cursor-pointer py-0.5"
             >
               <option value="All">All Destinations</option>
-              <option value="Rajasthan">Rajasthan</option>
-              <option value="Kerala">Kerala</option>
-              <option value="Ladakh">Ladakh</option>
-              <option value="Meghalaya">Meghalaya</option>
-              <option value="Goa">Goa</option>
-              <option value="Himachal Pradesh">Himachal Pradesh</option>
+              {availableDestinations && availableDestinations.length > 0 ? (
+                availableDestinations.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Ladakh">Ladakh</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Himachal Pradesh">Himachal Pradesh</option>
+                </>
+              )}
             </select>
           </div>
         </div>

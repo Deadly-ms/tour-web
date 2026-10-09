@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@clerk/nextjs';
 import { useToast } from '@/components/ui/Toast';
-import { TourPackage, ItineraryDay } from '@/types';
+import { TourPackage, ItineraryDay, HotelItem } from '@/types';
 import {
   adminCreateTour,
   adminUpdateTour,
@@ -26,6 +26,8 @@ import {
   FileText,
   DollarSign,
   Eye,
+  Hotel,
+  Star,
 } from 'lucide-react';
 
 interface TourFormModalProps {
@@ -53,10 +55,12 @@ export function TourFormModal({
   const { getToken } = useAuth();
   const { showToast } = useToast();
 
-  const [activeTab, setActiveTab] = useState<'basic' | 'media' | 'itinerary' | 'details'>('basic');
+  const [activeTab, setActiveTab] = useState<'basic' | 'media' | 'itinerary' | 'hotels' | 'details'>('basic');
   const [submitting, setSubmitting] = useState(false);
   const [uploadingHero, setUploadingHero] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [uploadingStayIndex, setUploadingStayIndex] = useState<number | null>(null);
+  const [uploadingHotelIndex, setUploadingHotelIndex] = useState<number | null>(null);
 
   // Form State
   const [title, setTitle] = useState('');
@@ -73,6 +77,7 @@ export function TourFormModal({
   const [heroImage, setHeroImage] = useState('');
   const [gallery, setGallery] = useState<string[]>([]);
   const [newGalleryUrl, setNewGalleryUrl] = useState('');
+  const [hotels, setHotels] = useState<HotelItem[]>([]);
   const [overview, setOverview] = useState('');
   const [tags, setTags] = useState('');
   const [tripType, setTripType] = useState('Private Tour');
@@ -144,6 +149,7 @@ export function TourFormModal({
       setInclusions(tourToEdit.inclusions || []);
       setExclusions(tourToEdit.exclusions || []);
       setItinerary(tourToEdit.itinerary || []);
+      setHotels(tourToEdit.hotels || []);
     } else {
       // Defaults for new tour
       setTitle('');
@@ -159,6 +165,7 @@ export function TourFormModal({
       setDiscountPercent(16);
       setHeroImage('https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1600&q=85');
       setGallery([]);
+      setHotels([]);
       setOverview('');
       setTags('Heritage, Luxury, Culture');
       setTripType('Private Tour');
@@ -327,6 +334,115 @@ export function TourFormModal({
     );
   };
 
+  // Hotel handlers
+  const handleAddHotel = () => {
+    setHotels((prev) => [
+      ...prev,
+      {
+        name: '',
+        location: destination || '',
+        category: 'Boutique Luxury Stay',
+        image: gallery[0] || heroImage || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+        rating: 4.9,
+      },
+    ]);
+  };
+
+  const handleUpdateHotel = (index: number, field: keyof HotelItem, value: any) => {
+    setHotels((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
+    );
+  };
+
+  const handleRemoveHotel = (index: number) => {
+    setHotels((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Upload stay image for specific itinerary day
+  const handleStayFileUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingStayIndex(index);
+      const token = await getToken();
+      const res = await adminUploadImage(file, token);
+
+      if (res.success && res.url) {
+        handleUpdateDay(index, 'accommodationImage', res.url);
+        showToast('Stay / Accommodation photo uploaded successfully!', 'success');
+      } else {
+        showToast(res.error || 'Failed to upload accommodation photo.', 'error');
+      }
+    } catch (err) {
+      showToast('Upload failed: ' + (err as Error).message, 'error');
+    } finally {
+      setUploadingStayIndex(null);
+      e.target.value = '';
+    }
+  };
+
+  // Upload image for specific curated hotel in Tab 4
+  const handleHotelFileUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingHotelIndex(index);
+      const token = await getToken();
+      const res = await adminUploadImage(file, token);
+
+      if (res.success && res.url) {
+        handleUpdateHotel(index, 'image', res.url);
+        showToast('Stay photo uploaded successfully!', 'success');
+      } else {
+        showToast(res.error || 'Failed to upload stay photo.', 'error');
+      }
+    } catch (err) {
+      showToast('Upload failed: ' + (err as Error).message, 'error');
+    } finally {
+      setUploadingHotelIndex(null);
+      e.target.value = '';
+    }
+  };
+
+  const handleAutofillHotelsFromItinerary = () => {
+    const accommodations = Array.from(
+      new Set(
+        itinerary
+          .map((d) => d.accommodation?.trim())
+          .filter((acc): acc is string => Boolean(acc && !acc.match(/^(none|n\/a|selected hotel|selected hotel \/ resort|tba)$/i)))
+      )
+    );
+
+    if (accommodations.length === 0) {
+      showToast('No unique accommodations found in itinerary yet.', 'error');
+      return;
+    }
+
+    const newItems: HotelItem[] = accommodations.map((acc, idx) => {
+      const existing = hotels.find((h) => h.name.toLowerCase() === acc.toLowerCase());
+      if (existing) return existing;
+
+      // Check if any itinerary day has an accommodationImage for this stay
+      const matchingDay = itinerary.find(
+        (d) => d.accommodation?.trim().toLowerCase() === acc.toLowerCase() && d.accommodationImage
+      );
+      const stayImg = matchingDay?.accommodationImage || gallery[idx % gallery.length] || heroImage || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80';
+
+      return {
+        name: acc,
+        location: destination || 'Prime Destination',
+        category: idx % 2 === 0 ? '5-Star Heritage Royal Stay' : 'Luxury Boutique Lakeview Resort',
+        image: stayImg,
+        rating: 4.9,
+      };
+    });
+
+    setHotels(newItems);
+    showToast(`Loaded ${newItems.length} curated stays from itinerary!`, 'success');
+  };
+
   // Form Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -388,6 +504,7 @@ export function TourFormModal({
         inclusions,
         exclusions,
         itinerary,
+        hotels,
       };
 
       const targetId = tourToEdit?.id || tourToEdit?._id;
@@ -485,6 +602,18 @@ export function TourFormModal({
           </button>
           <button
             type="button"
+            onClick={() => setActiveTab('hotels')}
+            className={`flex items-center gap-1.5 py-3 px-3.5 border-b-2 transition whitespace-nowrap ${
+              activeTab === 'hotels'
+                ? 'border-teal-600 text-teal-800 font-bold'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Hotel className="w-3.5 h-3.5" />
+            <span>4. Curated Stays ({hotels.length})</span>
+          </button>
+          <button
+            type="button"
             onClick={() => setActiveTab('details')}
             className={`flex items-center gap-1.5 py-3 px-3.5 border-b-2 transition whitespace-nowrap ${
               activeTab === 'details'
@@ -493,7 +622,7 @@ export function TourFormModal({
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>4. Inclusions & Settings</span>
+            <span>5. Inclusions & Settings</span>
           </button>
         </div>
 
@@ -907,11 +1036,70 @@ export function TourFormModal({
                         <label className="font-semibold text-slate-600 text-[11px]">Stay / Accommodation</label>
                         <input
                           type="text"
-                          placeholder="e.g. Trident Hotel Jaipur"
+                          placeholder="e.g. Trident Hotel Jaipur / famus cave"
                           value={dayItem.accommodation || ''}
                           onChange={(e) => handleUpdateDay(index, 'accommodation', e.target.value)}
                           className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-600 bg-white"
                         />
+                      </div>
+                    </div>
+
+                    {/* Stay / Accommodation Photo Upload */}
+                    <div className="p-3 bg-stone-50 rounded-xl border border-stone-200/80 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="font-semibold text-slate-700 text-[11px] flex items-center gap-1.5">
+                          <Hotel className="w-3.5 h-3.5 text-amber-700" />
+                          <span>Stay / Accommodation Photo</span>
+                        </label>
+                        {dayItem.accommodationImage && (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateDay(index, 'accommodationImage', '')}
+                            className="text-[10px] text-red-500 hover:text-red-700 font-medium flex items-center gap-1"
+                          >
+                            <X className="w-3 h-3" /> Remove Photo
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        {dayItem.accommodationImage && (
+                          <div className="relative w-16 h-12 rounded-lg overflow-hidden border border-slate-300 shrink-0 bg-stone-200">
+                            <Image
+                              src={dayItem.accommodationImage}
+                              alt={dayItem.accommodation || 'Stay image'}
+                              fill
+                              unoptimized
+                              className="object-cover"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex-1 flex items-center gap-1.5">
+                          <input
+                            type="text"
+                            placeholder="Paste photo URL or click Upload..."
+                            value={dayItem.accommodationImage || ''}
+                            onChange={(e) => handleUpdateDay(index, 'accommodationImage', e.target.value)}
+                            className="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-600 bg-white font-mono"
+                          />
+
+                          <label className="cursor-pointer px-3 py-1.5 rounded-xl border border-teal-600 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold flex items-center gap-1.5 transition shrink-0 shadow-sm">
+                            {uploadingStayIndex === index ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Upload className="w-3.5 h-3.5" />
+                            )}
+                            <span>{uploadingStayIndex === index ? 'Uploading...' : 'Upload Image'}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              disabled={uploadingStayIndex === index}
+                              onChange={(e) => handleStayFileUpload(index, e)}
+                            />
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -920,7 +1108,202 @@ export function TourFormModal({
             </div>
           )}
 
-          {/* TAB 4: OVERVIEW, INCLUSIONS & VISIBILITY */}
+          {/* TAB 4: CURATED STAYS & RESORTS */}
+          {activeTab === 'hotels' && (
+            <div className="space-y-6 animate-in fade-in duration-150">
+              <div className="p-4 bg-amber-50/50 rounded-2xl border border-amber-200/60 space-y-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h3 className="font-bold text-amber-950 text-sm flex items-center gap-1.5">
+                      <Hotel className="w-4 h-4 text-amber-700" />
+                      <span>Curated Stays &amp; Resorts ({hotels.length})</span>
+                    </h3>
+                    <p className="text-[11px] text-amber-800/80 pt-0.5">
+                      Handpicked boutique hotels, heritage palaces, and luxury stays displayed on the package page.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleAutofillHotelsFromItinerary}
+                      className="px-3 py-1.5 rounded-xl border border-amber-300 bg-white hover:bg-amber-100 text-amber-900 font-bold text-[11px] transition flex items-center gap-1.5 shadow-sm"
+                      title="Extract hotel names from itinerary accommodation fields"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Sync from Itinerary</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleAddHotel}
+                      className="px-3.5 py-1.5 rounded-xl bg-[#18281d] text-white hover:bg-black font-bold text-[11px] transition flex items-center gap-1.5 shadow-sm"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Stay</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {hotels.length === 0 ? (
+                <div className="text-center py-12 px-4 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 space-y-3">
+                  <Hotel className="w-8 h-8 text-slate-300 mx-auto" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-slate-700 text-xs">No explicit curated stays added yet</p>
+                    <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
+                      Stays will automatically be generated from your itinerary accommodation fields, or you can add specific boutique stays with photos and ratings here.
+                    </p>
+                  </div>
+                  <div className="pt-2 flex items-center justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleAutofillHotelsFromItinerary}
+                      className="px-3.5 py-2 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-700 transition flex items-center gap-1.5 shadow-sm"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Auto-fill from Itinerary</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleAddHotel}
+                      className="px-3.5 py-2 rounded-xl border border-slate-300 bg-white font-bold text-xs hover:bg-slate-100 transition flex items-center gap-1.5"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Manually</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {hotels.map((hotelItem, index) => (
+                    <div
+                      key={index}
+                      className="p-4 bg-white rounded-2xl border border-slate-200 space-y-4 shadow-sm relative group hover:border-teal-300 transition"
+                    >
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-[10px] font-bold flex items-center justify-center">
+                            {index + 1}
+                          </span>
+                          <span className="font-bold text-slate-800 text-xs">
+                            {hotelItem.name || 'New Stay / Hotel'}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveHotel(index)}
+                          className="text-slate-400 hover:text-red-600 p-1 rounded-lg hover:bg-red-50 transition"
+                          title="Remove this hotel"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="font-bold text-slate-600 text-[11px]">Hotel / Property Name *</label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="e.g. Shahpura Haveli Heritage Palace"
+                            value={hotelItem.name}
+                            onChange={(e) => handleUpdateHotel(index, 'name', e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-600 bg-slate-50/50"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="font-bold text-slate-600 text-[11px]">Location / City</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. Jaipur, Rajasthan"
+                            value={hotelItem.location || ''}
+                            onChange={(e) => handleUpdateHotel(index, 'location', e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-600 bg-slate-50/50"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="font-bold text-slate-600 text-[11px]">Category / Tag</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. 5-Star Heritage Royal Stay"
+                            value={hotelItem.category || ''}
+                            onChange={(e) => handleUpdateHotel(index, 'category', e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-600 bg-slate-50/50"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="font-bold text-slate-600 text-[11px]">Rating (out of 5.0)</label>
+                          <input
+                            type="number"
+                            step="0.05"
+                            min="1"
+                            max="5"
+                            value={hotelItem.rating || 4.9}
+                            onChange={(e) => handleUpdateHotel(index, 'rating', parseFloat(e.target.value) || 4.9)}
+                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-600 bg-slate-50/50"
+                          />
+                        </div>
+
+                        <div className="space-y-1 md:col-span-2">
+                          <div className="flex items-center justify-between">
+                            <label className="font-bold text-slate-600 text-[11px]">Stay / Hotel Photo</label>
+                            {hotelItem.image && (
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateHotel(index, 'image', '')}
+                                className="text-[10px] text-red-500 hover:text-red-700 font-medium flex items-center gap-1"
+                              >
+                                <X className="w-3 h-3" /> Clear Photo
+                              </button>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {hotelItem.image && (
+                              <div className="relative w-14 h-11 rounded-lg overflow-hidden border border-slate-300 shrink-0 bg-stone-100">
+                                <Image
+                                  src={hotelItem.image}
+                                  alt={hotelItem.name || 'Stay'}
+                                  fill
+                                  unoptimized
+                                  className="object-cover"
+                                />
+                              </div>
+                            )}
+                            <input
+                              type="text"
+                              placeholder="Paste photo URL or click Upload..."
+                              value={hotelItem.image || ''}
+                              onChange={(e) => handleUpdateHotel(index, 'image', e.target.value)}
+                              className="flex-1 px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-600 bg-slate-50/50 font-mono"
+                            />
+                            <label className="cursor-pointer px-3 py-2 rounded-xl border border-teal-600 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold flex items-center gap-1.5 transition shrink-0 shadow-sm">
+                              {uploadingHotelIndex === index ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <Upload className="w-3.5 h-3.5" />
+                              )}
+                              <span>{uploadingHotelIndex === index ? 'Uploading...' : 'Upload Image'}</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                disabled={uploadingHotelIndex === index}
+                                onChange={(e) => handleHotelFileUpload(index, e)}
+                              />
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 5: OVERVIEW, INCLUSIONS & VISIBILITY */}
           {activeTab === 'details' && (
             <div className="space-y-6 animate-in fade-in duration-150">
               {/* Overview */}

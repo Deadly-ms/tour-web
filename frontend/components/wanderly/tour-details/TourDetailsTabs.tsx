@@ -12,8 +12,14 @@ const TABS = [
   { id: 'faq', label: 'FAQ' },
 ];
 
-export function TourDetailsTabs() {
+interface TourDetailsTabsProps {
+  hasHotels?: boolean;
+}
+
+export function TourDetailsTabs({ hasHotels = true }: TourDetailsTabsProps) {
   const [activeTab, setActiveTab] = useState('overview');
+
+  const visibleTabs = TABS.filter((tab) => (tab.id === 'hotels' ? hasHotels : true));
 
   const scrollToSection = (id: string) => {
     setActiveTab(id);
@@ -29,7 +35,7 @@ export function TourDetailsTabs() {
     <div className="sticky top-16 sm:top-20 z-30 bg-[#fcfbfa]/95 backdrop-blur-md border-b border-[#e8e4dc] transition-all">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <nav className="flex items-center gap-6 sm:gap-8 overflow-x-auto py-3.5 scrollbar-none text-xs sm:text-sm font-medium">
-          {TABS.map((tab) => {
+          {visibleTabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, PhoneCall, MapPin, Send, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
+import { getAllTourPackages } from '@/services/tour.service';
 
 export default function ContactPage() {
   const { showToast } = useToast();
@@ -10,10 +11,35 @@ export default function ContactPage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [destination, setDestination] = useState('Rajasthan');
+  const [destinationsList, setDestinationsList] = useState<string[]>([
+    'Rajasthan', 'Kerala', 'Ladakh', 'Meghalaya', 'Goa', 'Himachal Pradesh'
+  ]);
   const [message, setMessage] = useState('');
   const [website, setWebsite] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const liveTours = await getAllTourPackages();
+        if (liveTours && liveTours.length > 0) {
+          const list: string[] = [];
+          liveTours.forEach((p) => {
+            if (p.destination) {
+              const clean = p.destination.split(',')[0].trim();
+              if (clean && !list.some((d) => d.toLowerCase() === clean.toLowerCase())) {
+                list.push(clean);
+              }
+            }
+          });
+          if (list.length > 0) setDestinationsList(list);
+        }
+      } catch (err) {
+        console.warn('Failed to load destinations in Contact page:', err);
+      }
+    })();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -209,12 +235,11 @@ export default function ContactPage() {
                         onChange={(e) => setDestination(e.target.value)}
                         className="w-full bg-[#fcfbfa] border border-[#e8e4dc] rounded-xl px-4 py-2.5 text-xs sm:text-sm text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
                       >
-                        <option value="Rajasthan">Rajasthan</option>
-                        <option value="Kerala">Kerala</option>
-                        <option value="Ladakh">Ladakh</option>
-                        <option value="Meghalaya">Meghalaya</option>
-                        <option value="Goa">Goa</option>
-                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        {destinationsList.map((d) => (
+                          <option key={d} value={d}>
+                            {d}
+                          </option>
+                        ))}
                         <option value="Other">Other / Custom</option>
                       </select>
                     </div>

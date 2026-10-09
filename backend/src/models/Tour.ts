@@ -6,6 +6,15 @@ export interface IItineraryDay {
   description: string;
   meals?: string;
   accommodation?: string;
+  accommodationImage?: string;
+}
+
+export interface IHotelItem {
+  name: string;
+  location?: string;
+  category?: string;
+  image?: string;
+  rating?: number;
 }
 
 export interface ITour extends Document {
@@ -28,6 +37,7 @@ export interface ITour extends Document {
   inclusions: string[];
   exclusions: string[];
   itinerary: IItineraryDay[];
+  hotels?: IHotelItem[];
   featured: boolean;
   bestSeller: boolean;
   isPublished: boolean;
@@ -40,6 +50,17 @@ export interface ITour extends Document {
   updatedAt: Date;
 }
 
+const hotelItemSchema = new Schema<IHotelItem>(
+  {
+    name: { type: String, required: true, trim: true },
+    location: { type: String, trim: true },
+    category: { type: String, trim: true },
+    image: { type: String, trim: true },
+    rating: { type: Number, default: 4.9 },
+  },
+  { _id: false }
+);
+
 const itineraryDaySchema = new Schema<IItineraryDay>(
   {
     day: { type: Number, required: true },
@@ -47,6 +68,7 @@ const itineraryDaySchema = new Schema<IItineraryDay>(
     description: { type: String, required: true, trim: true },
     meals: { type: String, trim: true },
     accommodation: { type: String, trim: true },
+    accommodationImage: { type: String, trim: true },
   },
   { _id: false }
 );
@@ -144,6 +166,10 @@ const tourSchema = new Schema<ITour>(
     },
     itinerary: {
       type: [itineraryDaySchema],
+      default: [],
+    },
+    hotels: {
+      type: [hotelItemSchema],
       default: [],
     },
     featured: {
