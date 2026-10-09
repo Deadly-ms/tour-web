@@ -61,6 +61,18 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      'react-router-dom': require('path').resolve(__dirname, 'lib/compat/react-router-dom.tsx'),
+    };
+    return config;
+  },
+  turbopack: {
+    resolveAlias: {
+      'react-router-dom': './lib/compat/react-router-dom.tsx',
+    },
+  },
 };
 
 export default nextConfig;
