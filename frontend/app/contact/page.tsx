@@ -106,7 +106,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="pt-28 sm:pt-36 pb-24 bg-[#fcfbfa] min-h-screen">
+    <main className="pt-10 sm:pt-14 pb-24 bg-[#fcfbfa] min-h-screen">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column: Narrative & Contacts */}

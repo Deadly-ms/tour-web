@@ -19,7 +19,7 @@ export function ServicesHero({
   image = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80',
 }: ServicesHeroProps) {
   return (
-    <section className="pt-28 sm:pt-36 pb-16 sm:pb-20 bg-[#fcfbfa]">
+    <section className="pt-10 sm:pt-14 pb-16 sm:pb-20 bg-[#fcfbfa]">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* Left Text */}

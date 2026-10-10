@@ -33,7 +33,7 @@ export function PackagesHero({
       </div>
 
       {/* Hero Typography */}
-      <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 text-center text-white space-y-4 pt-12">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 text-center text-white space-y-4 py-6 sm:py-8">
         <div className="inline-block">
           <span className="text-[11px] font-semibold tracking-[0.25em] text-[#e8cbb0] uppercase">
             {tag}

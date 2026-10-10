@@ -51,21 +51,23 @@ export function WanderlyNavbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`${
+          isHomePage ? 'fixed top-0 left-0 right-0' : 'sticky top-0'
+        } z-40 transition-all duration-300 ${
           isTransparent
-            ? 'bg-transparent text-white pt-2 sm:pt-4'
-            : 'bg-[#fcfbfa]/95 backdrop-blur-md text-[#18281d] border-b border-[#e8e4dc] py-1 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)]'
+            ? 'bg-transparent text-white pt-1.5 sm:pt-2'
+            : 'bg-[#fcfbfa]/95 backdrop-blur-md text-[#18281d] border-b border-[#e8e4dc] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)]'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               <svg
                 viewBox="0 0 28 28"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform group-hover:scale-105 ${
+                className={`w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-105 ${
                   isTransparent ? 'text-white' : 'text-[#18281d]'
                 }`}
               >
@@ -79,7 +81,7 @@ export function WanderlyNavbar() {
                 <circle cx="14" cy="4" r="1.5" fill="currentColor" />
               </svg>
               <span
-                className={`font-serif text-2xl sm:text-[26px] font-normal tracking-tight ${
+                className={`font-serif text-xl sm:text-2xl font-normal tracking-tight ${
                   isTransparent ? 'text-white' : 'text-[#18281d]'
                 }`}
               >
@@ -88,7 +90,7 @@ export function WanderlyNavbar() {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-7 lg:gap-9">
+            <nav className="hidden md:flex items-center gap-6 lg:gap-8">
               {navLinks.map((link) => {
                 const active = isActive(link.href);
                 return (
@@ -119,22 +121,22 @@ export function WanderlyNavbar() {
             </nav>
 
             {/* Right Side: Search + Plan Your Trip Button */}
-            <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2.5 sm:gap-3.5">
               <button
                 onClick={() => setIsSearchModalOpen(true)}
-                className={`p-2 rounded-full transition-colors ${
+                className={`p-1.5 sm:p-2 rounded-full transition-colors ${
                   isTransparent
                     ? 'text-white/80 hover:text-white hover:bg-white/10'
                     : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
                 }`}
                 aria-label="Search destinations"
               >
-                <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Search className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               </button>
 
               <button
                 onClick={() => setIsPlanModalOpen(true)}
-                className={`hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+                className={`hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-[13px] font-medium transition-all duration-200 ${
                   isTransparent
                     ? 'bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-sm'
                     : 'bg-[#18281d] text-white hover:bg-[#253d2c] shadow-sm'
@@ -152,14 +154,14 @@ export function WanderlyNavbar() {
               {/* Mobile menu toggle button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`p-2 rounded-xl md:hidden transition-colors ${
+                className={`p-1.5 rounded-lg md:hidden transition-colors ${
                   isTransparent
                     ? 'text-white hover:bg-white/10'
                     : 'text-stone-800 hover:bg-stone-100'
                 }`}
                 aria-label="Toggle navigation"
               >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {isMobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
               </button>
             </div>
           </div>

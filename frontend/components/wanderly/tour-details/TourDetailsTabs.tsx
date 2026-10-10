@@ -25,14 +25,14 @@ export function TourDetailsTabs({ hasHotels = true }: TourDetailsTabsProps) {
     setActiveTab(id);
     const element = document.getElementById(id);
     if (element) {
-      const yOffset = -90;
+      const yOffset = -115;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="sticky top-16 sm:top-20 z-30 bg-[#fcfbfa]/95 backdrop-blur-md border-b border-[#e8e4dc] transition-all">
+    <div className="sticky top-14 sm:top-16 z-30 bg-[#fcfbfa]/95 backdrop-blur-md border-b border-[#e8e4dc] transition-all">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <nav className="flex items-center gap-6 sm:gap-8 overflow-x-auto py-3.5 scrollbar-none text-xs sm:text-sm font-medium">
           {visibleTabs.map((tab) => {
