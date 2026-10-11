@@ -151,26 +151,26 @@ export function MomentsInspire({
   );
 
   return (
-    <section ref={root} className="relative overflow-x-clip py-20 sm:py-28 bg-[#fcfbfa]">
+    <section ref={root} className="relative overflow-x-clip py-20 sm:py-28 bg-white">
       {/* Heading */}
       <div ref={head} className="max-w-2xl mx-auto px-6 sm:px-8 text-center space-y-4 sm:space-y-5">
-        <div className="flex items-center justify-center gap-4">
-          <span className="h-px w-8 bg-[#c58b59]" />
-          <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
+        <div className="flex items-center justify-center gap-3">
+          <span className="h-px w-8 bg-gray-400" />
+          <span className="text-sm uppercase tracking-widest text-gray-500">
             {tag}
           </span>
-          <span className="h-px w-8 bg-[#c58b59]" />
+          <span className="h-px w-8 bg-gray-400" />
         </div>
-        <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal text-[#18281d] leading-[1.08] whitespace-pre-line tracking-tight">
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-[1.08] whitespace-pre-line tracking-tight">
           {title}
         </h2>
-        <p className="text-sm text-stone-500 font-light leading-relaxed max-w-md mx-auto">
+        <p className="text-sm text-gray-600 leading-relaxed max-w-md mx-auto">
           {description}
         </p>
         <div className="pt-2">
           <button
             onClick={() => openLightbox(0)}
-            className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#18281d] text-white text-xs sm:text-sm font-medium hover:bg-[#c58b59] transition-colors duration-300 shadow-sm"
+            className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-black text-white text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors duration-300 shadow-sm"
           >
             <span>Explore Gallery</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -190,7 +190,7 @@ export function MomentsInspire({
                 onClick={() => openLightbox(tile.photoIndex)}
                 aria-label={`Open ${tile.photo.title}`}
                 style={{ flex: `${tile.weight} 1 0%` }}
-                className="group/tile relative min-w-0 overflow-hidden rounded-xl sm:rounded-2xl bg-stone-200 cursor-pointer text-left"
+                className="group/tile relative min-w-0 overflow-hidden rounded-xl sm:rounded-2xl bg-gray-100 cursor-pointer text-left"
               >
                 <Image
                   src={tile.photo.url}
@@ -200,10 +200,10 @@ export function MomentsInspire({
                   className="object-cover group-hover/tile:scale-110 transition-transform duration-700 ease-out"
                 />
                 {/* Dims every tile except the hovered one */}
-                <span className="pointer-events-none absolute inset-0 bg-[#fcfbfa]/60 opacity-0 group-hover/grid:opacity-100 group-hover/tile:opacity-0! transition-opacity duration-300" />
+                <span className="pointer-events-none absolute inset-0 bg-white/60 opacity-0 group-hover/grid:opacity-100 group-hover/tile:opacity-0! transition-opacity duration-300" />
                 {/* Title on hover */}
                 <span className="pointer-events-none absolute inset-x-0 bottom-0 p-3 sm:p-4 bg-gradient-to-t from-black/65 to-transparent text-white flex items-end justify-between translate-y-2 opacity-0 group-hover/tile:translate-y-0 group-hover/tile:opacity-100 transition duration-300">
-                  <span className="font-serif text-sm sm:text-base leading-tight">{tile.photo.title}</span>
+                  <span className="text-sm sm:text-base font-bold leading-tight">{tile.photo.title}</span>
                   <Expand className="w-3.5 h-3.5 shrink-0" />
                 </span>
               </button>

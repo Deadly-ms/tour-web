@@ -89,9 +89,9 @@ export function GalleryLightboxModal({
           />
         </div>
         <div className="mt-4 text-center text-white space-y-1">
-          {current.title && <p className="font-serif text-lg">{current.title}</p>}
-          {current.caption && <p className="text-xs text-stone-300 max-w-lg mx-auto">{current.caption}</p>}
-          <span className="text-[11px] text-stone-400 block tracking-wider">
+          {current.title && <p className="text-lg font-bold text-white">{current.title}</p>}
+          {current.caption && <p className="text-xs text-gray-300 max-w-lg mx-auto">{current.caption}</p>}
+          <span className="text-[11px] text-gray-400 font-mono block tracking-wider">
             {currentIndex + 1} / {images.length}
           </span>
         </div>

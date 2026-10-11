@@ -72,7 +72,7 @@ export function TourBookingModal({ tour, isOpen, onClose }: TourBookingModalProp
         <div className="p-4 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-teal-800 block">Package Fare</span>
-            <span className="text-xl font-black text-teal-950 font-serif">
+            <span className="text-xl font-black text-teal-950 font-sans font-bold">
               ₹{tour.price.toLocaleString('en-IN')} <span className="text-xs font-normal text-teal-800">/ person</span>
             </span>
           </div>

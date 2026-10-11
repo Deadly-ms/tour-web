@@ -152,19 +152,19 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
             </span>
           </div>
 
-          <h1 data-hero-anim className="font-serif text-5xl sm:text-7xl lg:text-[84px] text-white font-normal leading-[1.05] tracking-tight drop-shadow-sm">
+          <h1 data-hero-anim className="text-5xl sm:text-7xl lg:text-[84px] text-white font-bold leading-[1.05] tracking-tight drop-shadow-sm">
             {slide.titleLine1} <br />
             {slide.titleLine2}
           </h1>
 
-          <p data-hero-anim className="text-white/85 text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-lg drop-shadow-sm">
+          <p data-hero-anim className="text-white/90 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-lg drop-shadow-sm">
             {slide.subtitle}
           </p>
 
           <div data-hero-anim className="pt-2 sm:pt-4">
             <Link
               href={slide.ctaHref}
-              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#18281d]/90 hover:bg-[#18281d] text-white text-xs sm:text-sm font-medium tracking-wide backdrop-blur-md border border-white/20 transition-all duration-300 hover:shadow-xl group"
+              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-black/90 hover:bg-black text-white text-xs sm:text-sm font-medium tracking-wide backdrop-blur-md border border-white/20 transition-all duration-300 hover:shadow-xl group"
             >
               <span>{slide.ctaText}</span>
               <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform">
@@ -196,7 +196,7 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-xs text-white/90">
-            <MapPin className="w-3.5 h-3.5 text-[#c58b59]" />
+            <MapPin className="w-3.5 h-3.5 text-white" />
             <span>{slide.location}</span>
             <button
               onClick={() => setIsPlayingAudio(!isPlayingAudio)}

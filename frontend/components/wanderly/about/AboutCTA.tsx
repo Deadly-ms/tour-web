@@ -19,7 +19,7 @@ export function AboutCTA({
 
   return (
     <>
-      <section className="relative py-24 sm:py-32 bg-[#18281d] text-white overflow-hidden">
+      <section className="relative py-24 sm:py-32 bg-black text-white overflow-hidden">
         {/* Subtle Background Nature Overlay */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <Image
@@ -31,7 +31,7 @@ export function AboutCTA({
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 text-center space-y-8">
-          <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal leading-tight tracking-tight text-white drop-shadow-sm">
+          <h2 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-normal leading-tight tracking-tight text-white drop-shadow-sm">
             {titleLine1} <br />
             {titleLine2}
           </h2>

@@ -210,7 +210,7 @@ export function PlanTripModal({
   return (
     <div data-lenis-prevent className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-xl bg-[#fcfbfa] border border-[#e8e4dc] rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+        className="relative w-full max-w-xl bg-[#fcfbfa] border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -226,35 +226,35 @@ export function PlanTripModal({
             <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h3 className="font-serif text-3xl text-[#18281d]">Journey Request Received</h3>
-            <p className="text-stone-600 text-sm max-w-md mx-auto">
+            <h3 className="text-3xl font-bold text-gray-900">Journey Request Received</h3>
+            <p className="text-gray-600 text-sm max-w-md mx-auto">
               Thank you, {name}. Our bespoke trip planner will contact you with a personalized itinerary proposal within 24 hours.
             </p>
           </div>
         ) : (
           <div>
             <div className="mb-6">
-              <span className="text-[11px] font-semibold tracking-widest uppercase text-[#c58b59] flex items-center gap-1.5">
+              <span className="text-[11px] font-semibold tracking-widest uppercase text-gray-500 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" /> Tailor-Made Travel
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl text-[#18281d] mt-1">Plan Your Dream Journey</h2>
-              <p className="text-stone-600 text-xs sm:text-sm mt-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">Plan Your Dream Journey</h2>
+              <p className="text-gray-600 text-xs sm:text-sm mt-1">
                 Tell us your travel vision and let our local experts design your bespoke itinerary.
               </p>
             </div>
 
             {/* Selected Package Callout */}
             {currentTourTitle && (
-              <div className="mb-5 p-3.5 bg-[#f7f5f0] border border-[#e8dfd5] rounded-2xl flex items-center justify-between text-xs animate-in fade-in duration-200">
+              <div className="mb-5 p-3.5 bg-gray-50 border border-gray-200 rounded-2xl flex items-center justify-between text-xs animate-in fade-in duration-200">
                 <div className="flex items-center gap-2.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse shrink-0" />
                   <div>
-                    <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400">Selected Tour Package</p>
-                    <p className="font-serif text-base font-medium text-[#18281d]">{currentTourTitle}</p>
+                    <p className="text-[10px] uppercase font-bold tracking-wider text-gray-400">Selected Tour Package</p>
+                    <p className="text-base font-bold text-gray-900">{currentTourTitle}</p>
                   </div>
                 </div>
                 {destination && (
-                  <span className="text-[11px] font-medium text-[#c58b59] bg-white border border-[#e8dfd5] px-3 py-1 rounded-full shadow-sm shrink-0">
+                  <span className="text-[11px] font-semibold text-gray-900 bg-white border border-gray-200 px-3 py-1 rounded-full shadow-sm shrink-0">
                     {cleanDestName(destination) || destination}
                   </span>
                 )}
@@ -274,13 +274,13 @@ export function PlanTripModal({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#18281d]" /> Preferred Destination / Package
+                  <label className="block text-gray-700 font-medium mb-1.5 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-black" /> Preferred Destination / Package
                   </label>
                   <select
                     value={selectedSlug}
                     onChange={(e) => handlePackageChange(e.target.value)}
-                    className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                   >
                     <option value="custom">Custom / Multi-City (Bespoke Itinerary)</option>
                     <optgroup label="Available Tour Packages">
@@ -298,19 +298,19 @@ export function PlanTripModal({
                       placeholder="Specific destination (e.g. Varanasi, Kashmir, Multi-City)"
                       value={destination === 'Custom / Multi-City' ? '' : destination}
                       onChange={(e) => setDestination(e.target.value.trim() ? e.target.value : 'Custom / Multi-City')}
-                      className="mt-2 w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2 text-stone-800 text-xs focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                      className="mt-2 w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2 text-gray-900 text-xs focus:outline-none focus:ring-1 focus:ring-black"
                     />
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-[#18281d]" /> Duration
+                  <label className="block text-gray-700 font-medium mb-1.5 flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-black" /> Duration
                   </label>
                   <select
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                   >
                     <option value="3-5 Days">3 - 5 Days</option>
                     <option value="5-7 Days">5 - 7 Days</option>
@@ -322,13 +322,13 @@ export function PlanTripModal({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
-                    <Users className="w-3.5 h-3.5 text-[#18281d]" /> Travelers
+                  <label className="block text-gray-700 font-medium mb-1.5 flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5 text-black" /> Travelers
                   </label>
                   <select
                     value={travelers}
                     onChange={(e) => setTravelers(e.target.value)}
-                    className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                   >
                     <option value="Solo Traveler">Solo Traveler</option>
                     <option value="Couple">Couple / 2 Travelers</option>
@@ -338,13 +338,13 @@ export function PlanTripModal({
                 </div>
 
                 <div>
-                  <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
-                    <Compass className="w-3.5 h-3.5 text-[#18281d]" /> Travel Style
+                  <label className="block text-gray-700 font-medium mb-1.5 flex items-center gap-1">
+                    <Compass className="w-3.5 h-3.5 text-black" /> Travel Style
                   </label>
                   <select
                     value={travelStyle}
                     onChange={(e) => setTravelStyle(e.target.value)}
-                    className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                   >
                     <option value="Luxury & Heritage">Luxury & Heritage</option>
                     <option value="Adventure & Nature">Adventure & Nature</option>
@@ -355,63 +355,63 @@ export function PlanTripModal({
               </div>
 
               <div>
-                <label className="block text-stone-700 font-medium mb-1.5 flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-[#18281d]" /> Preferred Travel Date (Optional)
+                <label className="block text-gray-700 font-medium mb-1.5 flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-black" /> Preferred Travel Date (Optional)
                 </label>
                 <input
                   type="date"
                   min={today}
                   value={travelDate}
                   onChange={(e) => setTravelDate(e.target.value)}
-                  className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                  className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                 />
               </div>
 
-              <div className="pt-2 border-t border-[#e8e4dc] grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="pt-2 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-stone-700 font-medium mb-1.5">Your Full Name</label>
+                  <label className="block text-gray-700 font-medium mb-1.5">Your Full Name</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Eleanor Vance"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-stone-700 font-medium mb-1.5">Email Address</label>
+                  <label className="block text-gray-700 font-medium mb-1.5">Email Address</label>
                   <input
                     type="email"
                     required
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-stone-700 font-medium mb-1.5">Phone / WhatsApp Number</label>
+                <label className="block text-gray-700 font-medium mb-1.5">Phone / WhatsApp Number</label>
                 <input
                   type="tel"
                   placeholder="+91 98765 43210"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d]"
+                  className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black"
                 />
               </div>
 
               <div>
-                <label className="block text-stone-700 font-medium mb-1.5">Special Requests or Preferences (Optional)</label>
+                <label className="block text-gray-700 font-medium mb-1.5">Special Requests or Preferences (Optional)</label>
                 <textarea
                   rows={2}
                   placeholder="Mention preferred travel dates, specific monuments, dietary preferences, or pace..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full bg-white border border-[#e8e4dc] rounded-xl px-3.5 py-2.5 text-stone-800 focus:outline-none focus:ring-1 focus:ring-[#18281d] resize-none"
+                  className="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-900 focus:outline-none focus:ring-1 focus:ring-black resize-none"
                 />
               </div>
 
@@ -419,14 +419,14 @@ export function PlanTripModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-5 py-2.5 rounded-full border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors"
+                  className="px-5 py-2.5 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 rounded-full bg-[#18281d] text-white hover:bg-[#253d2c] transition-colors font-medium flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 rounded-full bg-black text-white hover:bg-gray-800 transition-colors font-medium flex items-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>

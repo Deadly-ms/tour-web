@@ -191,7 +191,7 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
   };
 
   return (
-    <section ref={root} className="relative bg-[#fcfbfa]">
+    <section ref={root} className="relative bg-white">
       {/* ───────── Desktop: pinned service reel ───────── */}
       {!reduce && (
         <div
@@ -202,14 +202,14 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
             <div className="grid grid-cols-12 gap-10 items-center">
               {/* Left: names + counter */}
               <div className="col-span-5">
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="h-px w-10 bg-[#c58b59]" />
-                  <span className="text-[11px] font-semibold tracking-[0.3em] text-[#c58b59] uppercase">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="h-px w-8 bg-gray-400" />
+                  <span className="text-sm uppercase tracking-widest text-gray-500">
                     What we do
                   </span>
                 </div>
-                <p className="font-serif text-2xl xl:text-3xl text-[#18281d] tracking-tight leading-snug mb-8">
-                  Services crafted <span className="italic text-[#c58b59]">around you.</span>
+                <p className="text-2xl xl:text-3xl font-bold text-gray-900 tracking-tight leading-snug mb-8">
+                  Services crafted <span className="text-gray-500">around you.</span>
                 </p>
 
                 <ol className="space-y-1.5">
@@ -220,9 +220,9 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                         data-name
                         onClick={() => jump(i)}
                         style={{ opacity: i === 0 ? 1 : 0.25 }}
-                        className="flex items-baseline gap-4 text-left font-serif text-3xl xl:text-5xl leading-[1.12] tracking-tight text-[#18281d]"
+                        className="flex items-baseline gap-4 text-left font-bold text-3xl xl:text-5xl leading-[1.12] tracking-tight text-gray-900"
                       >
-                        <span className="font-mono text-xs text-[#c58b59] tracking-normal">{s.number}</span>
+                        <span className="font-mono text-xs text-gray-400 tracking-normal">{s.number}</span>
                         {s.title}
                       </button>
                     </li>
@@ -230,7 +230,7 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                 </ol>
 
                 <div className="mt-10 flex items-center gap-5">
-                  <span className="block h-[1em] overflow-hidden font-serif text-3xl leading-none text-[#18281d]">
+                  <span className="block h-[1em] overflow-hidden text-3xl font-bold leading-none text-gray-900">
                     <span data-count-col className="block">
                       {services.map((s) => (
                         <span key={s.id} className="block h-[1em] leading-none">
@@ -239,11 +239,11 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                       ))}
                     </span>
                   </span>
-                  <span className="font-mono text-sm text-stone-400">/ {pad(n)}</span>
-                  <span className="relative block h-px w-32 bg-stone-300">
+                  <span className="font-mono text-sm text-gray-400">/ {pad(n)}</span>
+                  <span className="relative block h-px w-32 bg-gray-200">
                     <span
                       data-progress
-                      className="absolute inset-0 origin-left bg-[#c58b59]"
+                      className="absolute inset-0 origin-left bg-black"
                       style={{ transform: 'scaleX(0)' }}
                     />
                   </span>
@@ -252,7 +252,7 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
 
               {/* Right: photo reel */}
               <div className="col-span-7">
-                <div className="relative h-[68vh] max-h-[620px] min-h-[420px] w-full overflow-hidden rounded-[2rem] bg-stone-200 shadow-[0_50px_90px_-35px_rgba(24,40,29,0.45)]">
+                <div className="relative h-[68vh] max-h-[620px] min-h-[420px] w-full overflow-hidden rounded-[2rem] bg-gray-100 shadow-[0_40px_70px_-30px_rgba(0,0,0,0.2)]">
                   {services.map((s, i) => (
                     <div
                       key={s.id}
@@ -282,22 +282,22 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                         key={s.id}
                         data-info
                         style={i === 0 ? undefined : { opacity: 0, visibility: 'hidden' }}
-                        className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-5 rounded-2xl border border-white/60 bg-white/85 p-5 backdrop-blur-xl"
+                        className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-5 rounded-2xl border border-white/60 bg-white/90 p-5 backdrop-blur-xl"
                       >
                         <div className="flex items-center gap-4 min-w-0">
-                          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#18281d] text-white">
+                          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-white">
                             <Icon className="h-4 w-4" />
                           </span>
                           <div className="min-w-0">
-                            <h3 className="font-serif text-xl text-[#18281d] leading-tight">{s.showcaseTitle}</h3>
-                            <p className="mt-0.5 text-xs font-light text-stone-500 leading-relaxed">
+                            <h3 className="text-xl font-bold text-gray-900 leading-tight">{s.showcaseTitle}</h3>
+                            <p className="mt-0.5 text-xs font-normal text-gray-600 leading-relaxed">
                               {s.showcaseDescription}
                             </p>
                           </div>
                         </div>
                         <Link
                           href={s.href}
-                          className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-[#18281d] py-2 pl-5 pr-2 text-xs font-medium text-white transition-colors duration-300 hover:bg-[#c58b59]"
+                          className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-black py-2 pl-5 pr-2 text-xs font-medium text-white transition-colors duration-300 hover:bg-gray-800"
                         >
                           Explore
                           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:rotate-45">
@@ -317,14 +317,14 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
       {/* ───────── Mobile (and reduced motion): simple list ───────── */}
       <div className={`max-w-7xl mx-auto px-6 sm:px-8 py-20 ${reduce ? '' : 'md:hidden'}`}>
         <Reveal className="space-y-4 mb-12">
-          <div className="flex items-center gap-4">
-            <span className="h-px w-10 bg-[#c58b59]" />
-            <span className="text-[11px] font-semibold tracking-[0.3em] text-[#c58b59] uppercase">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-gray-400" />
+            <span className="text-sm uppercase tracking-widest text-gray-500">
               What we do
             </span>
           </div>
-          <h2 className="font-serif text-4xl text-[#18281d] tracking-tight leading-[1.08]">
-            Services crafted <span className="italic text-[#c58b59]">around you.</span>
+          <h2 className="text-4xl font-bold text-gray-900 tracking-tight leading-[1.08]">
+            Services crafted <span className="text-gray-500">around you.</span>
           </h2>
         </Reveal>
 
@@ -334,7 +334,7 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
             return (
               <Reveal key={s.id}>
                 <Link href={s.href} className="group block">
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-stone-200">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-gray-100">
                     <Image
                       src={s.showcaseImage}
                       alt={s.showcaseTitle}
@@ -346,12 +346,12 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                     <span className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-md">
                       <Icon className="h-4 w-4" />
                     </span>
-                    <span className="absolute right-5 top-4 font-serif text-3xl text-white/80">{s.number}</span>
+                    <span className="absolute right-5 top-4 text-3xl font-bold text-white/80">{s.number}</span>
                   </div>
                   <div className="space-y-2 pt-5">
-                    <h3 className="font-serif text-3xl text-[#18281d]">{s.title}</h3>
-                    <p className="text-sm font-light leading-relaxed text-stone-500">{s.showcaseDescription}</p>
-                    <span className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#c58b59]">
+                    <h3 className="text-2xl font-bold text-gray-900">{s.title}</h3>
+                    <p className="text-sm font-normal leading-relaxed text-gray-600">{s.showcaseDescription}</p>
+                    <span className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold uppercase tracking-wider text-black">
                       Explore <ArrowUpRight className="h-3.5 w-3.5" />
                     </span>
                   </div>

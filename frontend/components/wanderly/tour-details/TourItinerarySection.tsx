@@ -27,12 +27,12 @@ export function TourItinerarySection({ pkg }: TourItinerarySectionProps) {
   };
 
   return (
-    <section id="itinerary" className="space-y-6 pt-10 border-t border-[#e8e4dc]">
+    <section id="itinerary" className="space-y-6 pt-10 border-t border-gray-200">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#18281d]">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
           Itinerary
         </h2>
-        <span className="text-xs text-stone-400 font-light">
+        <span className="text-xs text-gray-400 font-normal">
           {pkg.itinerary.length} Days Planned
         </span>
       </div>
@@ -45,36 +45,36 @@ export function TourItinerarySection({ pkg }: TourItinerarySectionProps) {
             return (
               <div
                 key={item.day}
-                className="bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-sm transition-all"
+                className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm transition-all"
               >
                 <button
                   onClick={() => setOpenDay(isOpen ? null : item.day)}
-                  className="w-full p-4 sm:p-5 flex items-center justify-between text-left hover:bg-stone-50 transition-colors"
+                  className="w-full p-4 sm:p-5 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs px-2.5 py-1 rounded-full bg-[#18281d] text-white font-medium">
+                    <span className="font-mono text-xs px-2.5 py-1 rounded-full bg-black text-white font-semibold">
                       Day {item.day}
                     </span>
-                    <h3 className="font-serif text-sm sm:text-base font-medium text-stone-900">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900">
                       {item.title}
                     </h3>
                   </div>
-                  <div className="text-stone-400">
+                  <div className="text-gray-400">
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 pt-1 border-t border-stone-100 text-xs sm:text-sm text-stone-600 font-light leading-relaxed space-y-2">
+                  <div className="px-5 pb-5 pt-1 border-t border-gray-100 text-xs sm:text-sm text-gray-600 font-normal leading-relaxed space-y-2">
                     <p>{item.description}</p>
                     {(item.meals || item.accommodation) && (
-                      <div className="pt-2 flex flex-wrap items-center gap-3 text-[11px] text-stone-500 font-normal">
+                      <div className="pt-2 flex flex-wrap items-center gap-3 text-[11px] text-gray-500 font-normal">
                         {item.meals && <span>🍽️ Meals: {item.meals}</span>}
                         {item.accommodation && (
-                          <span className="inline-flex items-center gap-1.5 bg-stone-100/90 px-2 py-0.5 rounded-md text-stone-700">
+                          <span className="inline-flex items-center gap-1.5 bg-gray-100/90 px-2 py-0.5 rounded-md text-gray-700">
                             <span>🏨 Stay: {item.accommodation}</span>
                             {item.accommodationImage && (
-                              <span className="relative w-5 h-5 rounded overflow-hidden shrink-0 inline-block border border-stone-300">
+                              <span className="relative w-5 h-5 rounded overflow-hidden shrink-0 inline-block border border-gray-200">
                                 <Image
                                   src={item.accommodationImage}
                                   alt={item.accommodation}
@@ -102,7 +102,7 @@ export function TourItinerarySection({ pkg }: TourItinerarySectionProps) {
               <div
                 key={idx}
                 onClick={() => openLightbox(idx)}
-                className="relative h-28 sm:h-32 rounded-xl overflow-hidden cursor-pointer group bg-stone-100"
+                className="relative h-28 sm:h-32 rounded-xl overflow-hidden cursor-pointer group bg-gray-100"
               >
                 <Image
                   src={img.url}
@@ -117,7 +117,7 @@ export function TourItinerarySection({ pkg }: TourItinerarySectionProps) {
 
           <button
             onClick={() => openLightbox(0)}
-            className="w-full py-2.5 rounded-full border border-stone-300 text-stone-800 text-xs font-medium hover:bg-stone-100 transition-colors flex items-center justify-center gap-1.5"
+            className="w-full py-2.5 rounded-full border border-black text-black text-xs font-medium hover:bg-black hover:text-white transition-colors flex items-center justify-center gap-1.5"
           >
             <span>View Gallery</span>
             <span>→</span>

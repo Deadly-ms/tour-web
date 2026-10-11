@@ -1135,7 +1135,7 @@ export function TourFormModal({
                     <button
                       type="button"
                       onClick={handleAddHotel}
-                      className="px-3.5 py-1.5 rounded-xl bg-[#18281d] text-white hover:bg-black font-bold text-[11px] transition flex items-center gap-1.5 shadow-sm"
+                      className="px-3.5 py-1.5 rounded-xl bg-black text-white hover:bg-gray-800 font-bold text-[11px] transition flex items-center gap-1.5 shadow-sm"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add Stay</span>

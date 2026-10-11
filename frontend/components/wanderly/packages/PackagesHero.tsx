@@ -35,15 +35,15 @@ export function PackagesHero({
       {/* Hero Typography */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 text-center text-white space-y-4 py-6 sm:py-8">
         <div className="inline-block">
-          <span className="text-[11px] font-semibold tracking-[0.25em] text-[#e8cbb0] uppercase">
+          <span className="text-sm font-semibold tracking-widest text-white/80 uppercase">
             {tag}
           </span>
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal leading-tight tracking-tight text-white drop-shadow-sm">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white drop-shadow-sm">
           {titleLine1} <br />
           {titleLine2}
         </h1>
-        <p className="text-xs sm:text-sm md:text-base text-stone-200 font-light max-w-lg mx-auto leading-relaxed">
+        <p className="text-sm md:text-base text-white/90 font-normal max-w-lg mx-auto leading-relaxed">
           {subtitle}
         </p>
       </div>

@@ -20,20 +20,20 @@ interface ImpactMetricsProps {
 
 export function ImpactMetrics({ metrics = DEFAULT_METRICS }: ImpactMetricsProps) {
   return (
-    <section className="py-16 sm:py-20 bg-[#fcfbfa] border-b border-[#e8e4dc]">
+    <section className="py-16 sm:py-20 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="text-center mb-8">
-          <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
+          <span className="text-[11px] font-semibold tracking-[0.25em] text-gray-500 uppercase">
             OUR IMPACT
           </span>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[#e8e4dc] border border-[#e8e4dc] rounded-2xl sm:rounded-3xl bg-white shadow-sm overflow-hidden">
+        <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-[#e8e4dc] border border-gray-200 rounded-2xl sm:rounded-3xl bg-white shadow-sm overflow-hidden">
           {metrics.map((m, idx) => (
             <div key={idx} className="p-8 sm:p-10 text-center space-y-2">
-              <span className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#18281d] block">
+              <span className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 block">
                 {m.value}
               </span>
-              <span className="text-xs text-stone-500 font-light tracking-wide uppercase">
+              <span className="text-xs text-gray-500 font-light tracking-wide uppercase">
                 {m.label}
               </span>
             </div>

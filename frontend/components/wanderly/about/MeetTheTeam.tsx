@@ -48,24 +48,24 @@ export function MeetTheTeam({
   members = DEFAULT_TEAM,
 }: MeetTheTeamProps) {
   return (
-    <section className="py-20 sm:py-24 bg-[#fcfbfa]">
+    <section className="py-20 sm:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
           {/* Left: Text & CTA */}
           <div className="lg:col-span-5 space-y-6">
-            <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
+            <span className="text-[11px] font-semibold tracking-[0.25em] text-gray-500 uppercase">
               {tag}
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#18281d] leading-tight whitespace-pre-line tracking-tight">
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight whitespace-pre-line tracking-tight">
               {title}
             </h2>
-            <p className="text-xs sm:text-sm text-stone-500 font-light leading-relaxed max-w-sm pt-1">
+            <p className="text-xs sm:text-sm text-gray-500 font-light leading-relaxed max-w-sm pt-1">
               {subtitle}
             </p>
             <div className="pt-2">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#18281d] text-white text-xs sm:text-sm font-medium hover:bg-[#253d2c] transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-black text-white text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors shadow-sm"
               >
                 <span>Meet The Team</span>
                 <span className="text-xs">→</span>
@@ -87,10 +87,10 @@ export function MeetTheTeam({
                     />
                   </div>
                   <div>
-                    <h3 className="font-serif text-base font-medium text-[#18281d]">
+                    <h3 className="font-sans text-base font-medium text-gray-900">
                       {member.name}
                     </h3>
-                    <p className="text-[11px] text-stone-400 font-light">
+                    <p className="text-[11px] text-gray-400 font-light">
                       {member.role}
                     </p>
                   </div>

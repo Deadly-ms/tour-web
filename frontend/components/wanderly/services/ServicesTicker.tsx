@@ -73,22 +73,22 @@ export function ServicesTicker({
   return (
     <div
       ref={root}
-      className="overflow-hidden border-y border-[#e8e4dc] bg-[#fcfbfa] py-6 md:py-9"
+      className="overflow-hidden border-y border-gray-200 bg-white py-6 md:py-9"
       aria-hidden
     >
-      <div data-track className="flex w-max items-center whitespace-nowrap font-serif text-5xl md:text-7xl leading-none">
+      <div data-track className="flex w-max items-center whitespace-nowrap text-5xl md:text-7xl font-bold leading-none">
         {items.map((w, i) => (
           <span key={i} className="flex shrink-0 items-center gap-8 pr-8 md:gap-14 md:pr-14">
             <span
               className={
                 i % 2 === 0
-                  ? 'text-[#18281d]'
-                  : 'italic text-transparent [-webkit-text-stroke:1px_#c58b59]'
+                  ? 'text-gray-900'
+                  : 'text-transparent [-webkit-text-stroke:1.5px_#9ca3af]'
               }
             >
               {w}
             </span>
-            <span className="text-2xl text-[#c58b59] md:text-3xl">✦</span>
+            <span className="text-2xl text-gray-300 md:text-3xl">✦</span>
           </span>
         ))}
       </div>

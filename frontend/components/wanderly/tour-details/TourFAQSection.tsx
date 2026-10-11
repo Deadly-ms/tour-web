@@ -64,8 +64,8 @@ export function TourFAQSection({ pkg, faqs: propFaqs }: TourFAQSectionProps) {
   ];
 
   return (
-    <section id="faq" className="space-y-6 pt-10 border-t border-[#e8e4dc]">
-      <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#18281d]">
+    <section id="faq" className="space-y-6 pt-10 border-t border-gray-200">
+      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
         Frequently Asked Questions
       </h2>
 
@@ -75,22 +75,22 @@ export function TourFAQSection({ pkg, faqs: propFaqs }: TourFAQSectionProps) {
           return (
             <div
               key={idx}
-              className="bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-sm"
+              className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm"
             >
               <button
                 onClick={() => setOpenIdx(isOpen ? null : idx)}
-                className="w-full p-5 flex items-center justify-between text-left hover:bg-stone-50 transition-colors"
+                className="w-full p-5 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
               >
-                <span className="font-serif text-sm sm:text-base font-medium text-stone-900">
+                <span className="text-sm sm:text-base font-bold text-gray-900">
                   {faq.question}
                 </span>
-                <span className="text-stone-400 shrink-0 ml-4">
+                <span className="text-gray-400 shrink-0 ml-4">
                   {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </span>
               </button>
 
               {isOpen && (
-                <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-stone-600 font-light leading-relaxed border-t border-stone-100">
+                <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-gray-600 font-normal leading-relaxed border-t border-gray-100">
                   {faq.answer}
                 </div>
               )}

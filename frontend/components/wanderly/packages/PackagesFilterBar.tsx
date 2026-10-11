@@ -33,19 +33,19 @@ export function PackagesFilterBar({
     <div className="relative -mt-10 sm:-mt-12 z-30 max-w-5xl mx-auto px-4 sm:px-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-white border border-[#e8e4dc] rounded-2xl sm:rounded-full p-3 sm:p-2.5 shadow-xl flex flex-col sm:flex-row items-center gap-3 sm:gap-2"
+        className="bg-white border border-gray-200 rounded-2xl sm:rounded-full p-3 sm:p-2.5 shadow-xl flex flex-col sm:flex-row items-center gap-3 sm:gap-2"
       >
         {/* Destination */}
-        <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-[#e8e4dc]">
-          <MapPin className="w-4 h-4 text-stone-400 shrink-0" />
+        <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
           <div className="flex-1">
-            <label className="block text-[10px] uppercase font-bold tracking-wider text-stone-400">
+            <label className="block text-[10px] uppercase font-bold tracking-wider text-gray-400">
               Destination
             </label>
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="w-full bg-transparent text-xs font-medium text-stone-800 focus:outline-none cursor-pointer py-0.5"
+              className="w-full bg-transparent text-xs font-semibold text-gray-900 focus:outline-none cursor-pointer py-0.5"
             >
               <option value="All">All Destinations</option>
               {availableDestinations && availableDestinations.length > 0 ? (
@@ -69,16 +69,16 @@ export function PackagesFilterBar({
         </div>
 
         {/* Duration */}
-        <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-[#e8e4dc]">
-          <Calendar className="w-4 h-4 text-stone-400 shrink-0" />
+        <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+          <Calendar className="w-4 h-4 text-gray-400 shrink-0" />
           <div className="flex-1">
-            <label className="block text-[10px] uppercase font-bold tracking-wider text-stone-400">
+            <label className="block text-[10px] uppercase font-bold tracking-wider text-gray-400">
               Duration
             </label>
             <select
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
-              className="w-full bg-transparent text-xs font-medium text-stone-800 focus:outline-none cursor-pointer py-0.5"
+              className="w-full bg-transparent text-xs font-semibold text-gray-900 focus:outline-none cursor-pointer py-0.5"
             >
               <option value="All">Any Duration</option>
               <option value="short">1 - 4 Days</option>
@@ -90,15 +90,15 @@ export function PackagesFilterBar({
 
         {/* Travel Style */}
         <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3">
-          <Compass className="w-4 h-4 text-stone-400 shrink-0" />
+          <Compass className="w-4 h-4 text-gray-400 shrink-0" />
           <div className="flex-1">
-            <label className="block text-[10px] uppercase font-bold tracking-wider text-stone-400">
+            <label className="block text-[10px] uppercase font-bold tracking-wider text-gray-400">
               Travel Style
             </label>
             <select
               value={travelStyle}
               onChange={(e) => setTravelStyle(e.target.value)}
-              className="w-full bg-transparent text-xs font-medium text-stone-800 focus:outline-none cursor-pointer py-0.5"
+              className="w-full bg-transparent text-xs font-semibold text-gray-900 focus:outline-none cursor-pointer py-0.5"
             >
               <option value="All">All Styles</option>
               <option value="Heritage & Temples">Heritage & Culture</option>
@@ -112,7 +112,7 @@ export function PackagesFilterBar({
         {/* Search Button */}
         <button
           type="submit"
-          className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#18281d] text-white text-xs font-medium hover:bg-[#253d2c] transition-colors flex items-center justify-center gap-2 shrink-0 shadow-sm"
+          className="w-full sm:w-auto px-7 py-3 rounded-full bg-black text-white text-xs font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shrink-0 shadow-sm"
         >
           <Search className="w-3.5 h-3.5" />
           <span>Search</span>

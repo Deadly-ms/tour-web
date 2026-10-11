@@ -29,20 +29,20 @@ export function TourDetailsHero({ pkg, onPlanClick }: TourDetailsHeroProps) {
         <div className="max-w-3xl space-y-4 sm:space-y-5 text-white">
           {/* Destination Uppercase Tag */}
           <div>
-            <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] text-[#e8cbb0] uppercase">
+            <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] text-gray-300 uppercase">
               {pkg.destination.split(',')[0]}
             </span>
           </div>
 
-          {/* Large Serif Title */}
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal leading-[1.08] tracking-tight drop-shadow-md">
+          {/* Large Title */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.08] tracking-tight drop-shadow-md">
             {pkg.title}
           </h1>
 
           {/* Meta Tags Row */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-white/90 font-light">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-white/90 font-normal">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20">
-              <Clock className="w-3.5 h-3.5 text-[#e8cbb0]" />
+              <Clock className="w-3.5 h-3.5 text-white" />
               <span>{pkg.duration}</span>
             </span>
 
@@ -59,15 +59,15 @@ export function TourDetailsHero({ pkg, onPlanClick }: TourDetailsHeroProps) {
           {/* Price & Action Button */}
           <div className="pt-2 flex flex-wrap items-center gap-4 sm:gap-6">
             <div>
-              <span className="font-serif text-2xl sm:text-3xl font-medium text-white">
+              <span className="text-2xl sm:text-3xl font-bold text-white">
                 ₹ {pkg.price.toLocaleString()}
               </span>
-              <span className="text-xs text-white/70 font-light"> / person</span>
+              <span className="text-xs text-white/70 font-normal"> / person</span>
             </div>
 
             <button
               onClick={onPlanClick}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-white text-[#18281d] text-xs sm:text-sm font-semibold hover:bg-stone-100 transition-all duration-300 shadow-lg group hover:scale-105"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-white text-black text-xs sm:text-sm font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg group hover:scale-105"
             >
               <span>Plan This Journey</span>
               <span className="text-xs group-hover:translate-x-1 transition-transform">→</span>

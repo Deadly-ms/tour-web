@@ -3,24 +3,24 @@
 @theme {
   --font-serif: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-sans: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --color-forest-950: #0f1c13;
-  --color-forest-900: #18281d;
-  --color-forest-800: #223829;
-  --color-forest-700: #2e4d38;
-  --color-sand-50: #faf8f5;
-  --color-sand-100: #f4f0e8;
-  --color-sand-200: #e8e4dc;
-  --color-sand-500: #c58b59;
+  --color-forest-950: #0a0a0a;
+  --color-forest-900: #111827;
+  --color-forest-800: #1f2937;
+  --color-forest-700: #374151;
+  --color-sand-50: #ffffff;
+  --color-sand-100: #f9fafb;
+  --color-sand-200: #f3f4f6;
+  --color-sand-500: #6b7280;
 }
 
 :root {
   --font-playfair: var(--font-plus-jakarta);
-  --primary: #18281d;
-  --primary-hover: #243c2c;
-  --background: #fcfbfa;
-  --foreground: #1c1917;
+  --primary: #000000;
+  --primary-hover: #1f2937;
+  --background: #ffffff;
+  --foreground: #111827;
   --surface: #ffffff;
-  --border: #e8e4dc;
+  --border: #e5e7eb;
 }
 
 html.lenis,
@@ -43,7 +43,7 @@ html {
 
 body {
   background-color: var(--background);
-  color: var(--foreground);
+  color: #4b5563;
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -51,6 +51,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  color: #111827;
 }
 
 /* Custom smooth scrollbar */

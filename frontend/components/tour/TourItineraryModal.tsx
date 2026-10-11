@@ -62,7 +62,7 @@ export function TourItineraryModal({
             </div>
             <div className="text-right">
               <span className="text-[10px] uppercase font-bold text-slate-300 block">From</span>
-              <span className="text-xl font-black text-teal-400 font-serif">
+              <span className="text-xl font-black text-teal-400 font-sans font-bold">
                 ₹{tour.price.toLocaleString('en-IN')}
               </span>
             </div>
@@ -158,7 +158,7 @@ export function TourItineraryModal({
         <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
           <div>
             <span className="text-xs text-slate-500">Fixed Tariff:</span>
-            <span className="text-lg font-black text-slate-900 font-serif block">
+            <span className="text-lg font-black text-slate-900 font-sans font-bold block">
               ₹{tour.price.toLocaleString('en-IN')} <span className="text-xs font-normal text-slate-500">/ person</span>
             </span>
           </div>

@@ -71,22 +71,22 @@ export function StoriesFromRoad({
   const [activeStory, setActiveStory] = useState<StoryArticle | null>(null);
 
   return (
-    <section className="py-20 sm:py-24 bg-[#fcfbfa] border-b border-[#e8e4dc]">
+    <section className="py-20 sm:py-24 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 sm:mb-16">
-          <div className="space-y-2">
-            <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
+          <div className="space-y-3">
+            <span className="text-sm uppercase tracking-widest text-gray-500">
               {tag}
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#18281d] tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
               {title}
             </h2>
           </div>
           <div>
             <button
               onClick={() => setActiveStory(stories[0])}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-[#18281d] hover:text-[#c58b59] transition-colors group"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-black hover:text-gray-600 transition-colors group"
             >
               <span>View All Articles</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -103,7 +103,7 @@ export function StoriesFromRoad({
               className="group cursor-pointer flex flex-col space-y-4"
             >
               {/* Image */}
-              <div className="relative h-60 sm:h-64 w-full rounded-2xl overflow-hidden bg-stone-100">
+              <div className="relative h-60 sm:h-64 w-full rounded-2xl overflow-hidden bg-gray-100">
                 <Image
                   src={story.image}
                   alt={story.title}
@@ -114,14 +114,14 @@ export function StoriesFromRoad({
 
               {/* Text */}
               <div className="space-y-1.5">
-                <h3 className="font-serif text-xl font-normal text-[#18281d] group-hover:text-[#c58b59] transition-colors">
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-black transition-colors">
                   {story.title}
                 </h3>
-                <p className="text-xs text-stone-500 font-light">
+                <p className="text-xs text-gray-600 font-normal">
                   {story.subtitle}
                 </p>
                 <div className="pt-2">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#18281d] group-hover:underline">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-black group-hover:underline">
                     <span>Read More</span>
                     <span className="text-xs">→</span>
                   </span>
@@ -136,7 +136,7 @@ export function StoriesFromRoad({
       {activeStory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
-            className="relative w-full max-w-2xl bg-[#fcfbfa] border border-[#e8e4dc] rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto"
+            className="relative w-full max-w-2xl bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -157,36 +157,36 @@ export function StoriesFromRoad({
 
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-xs text-stone-400">
-                <span className="text-[#c58b59] font-medium uppercase tracking-wider">The Journal</span>
+                <span className="text-gray-500 font-medium uppercase tracking-wider">The Journal</span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5" /> {activeStory.readTime}
                 </span>
               </div>
 
-              <h2 className="font-serif text-3xl sm:text-4xl text-[#18281d]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
                 {activeStory.title}
               </h2>
-              <p className="text-stone-500 text-sm italic">
+              <p className="text-gray-500 text-sm italic">
                 {activeStory.subtitle}
               </p>
 
-              <div className="text-stone-700 text-sm leading-relaxed whitespace-pre-line space-y-4 border-t border-[#e8e4dc] pt-4">
+              <div className="text-gray-600 text-sm leading-relaxed whitespace-pre-line space-y-4 border-t border-gray-200 pt-4">
                 {activeStory.content}
               </div>
 
-              <div className="pt-6 border-t border-[#e8e4dc] flex justify-between items-center">
+              <div className="pt-6 border-t border-gray-200 flex justify-between items-center">
                 <Link
                   href="/tour-packages"
                   onClick={() => setActiveStory(null)}
-                  className="text-xs font-semibold text-[#18281d] hover:underline flex items-center gap-1"
+                  className="text-xs font-semibold text-black hover:underline flex items-center gap-1"
                 >
                   <span>Explore related journeys</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <button
                   onClick={() => setActiveStory(null)}
-                  className="px-5 py-2 rounded-full bg-[#18281d] text-white text-xs font-medium hover:bg-[#253d2c]"
+                  className="px-5 py-2 rounded-full bg-black text-white text-xs font-medium hover:bg-gray-800"
                 >
                   Close Article
                 </button>

@@ -56,7 +56,7 @@ export function WanderlyNavbar() {
         } z-40 transition-all duration-300 ${
           isTransparent
             ? 'bg-transparent text-white pt-1.5 sm:pt-2'
-            : 'bg-[#fcfbfa]/95 backdrop-blur-md text-[#18281d] border-b border-[#e8e4dc] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)]'
+            : 'bg-white/95 backdrop-blur-md text-gray-900 border-b border-gray-200 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)]'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,7 +68,7 @@ export function WanderlyNavbar() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 className={`w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-105 ${
-                  isTransparent ? 'text-white' : 'text-[#18281d]'
+                  isTransparent ? 'text-white' : 'text-black'
                 }`}
               >
                 <path
@@ -81,8 +81,8 @@ export function WanderlyNavbar() {
                 <circle cx="14" cy="4" r="1.5" fill="currentColor" />
               </svg>
               <span
-                className={`font-serif text-xl sm:text-2xl font-normal tracking-tight ${
-                  isTransparent ? 'text-white' : 'text-[#18281d]'
+                className={`text-xl sm:text-2xl font-bold tracking-tight ${
+                  isTransparent ? 'text-white' : 'text-black'
                 }`}
               >
                 Track your trip
@@ -103,15 +103,15 @@ export function WanderlyNavbar() {
                           ? 'text-white font-semibold'
                           : 'text-white/80 hover:text-white'
                         : active
-                        ? 'text-[#18281d] font-semibold'
-                        : 'text-stone-600 hover:text-[#18281d]'
+                        ? 'text-black font-semibold'
+                        : 'text-gray-600 hover:text-black'
                     }`}
                   >
                     {link.label}
                     {active && (
                       <span
                         className={`absolute bottom-0 left-0 right-0 h-[1.5px] rounded-full ${
-                          isTransparent ? 'bg-white' : 'bg-[#18281d]'
+                          isTransparent ? 'bg-white' : 'bg-black'
                         }`}
                       />
                     )}
@@ -127,7 +127,7 @@ export function WanderlyNavbar() {
                 className={`p-1.5 sm:p-2 rounded-full transition-colors ${
                   isTransparent
                     ? 'text-white/80 hover:text-white hover:bg-white/10'
-                    : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+                    : 'text-gray-600 hover:text-black hover:bg-gray-100'
                 }`}
                 aria-label="Search destinations"
               >
@@ -139,7 +139,7 @@ export function WanderlyNavbar() {
                 className={`hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-[13px] font-medium transition-all duration-200 ${
                   isTransparent
                     ? 'bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-sm'
-                    : 'bg-[#18281d] text-white hover:bg-[#253d2c] shadow-sm'
+                    : 'bg-black text-white hover:bg-gray-800 shadow-sm'
                 }`}
               >
                 <span>Plan Your Trip</span>
@@ -157,7 +157,7 @@ export function WanderlyNavbar() {
                 className={`p-1.5 rounded-lg md:hidden transition-colors ${
                   isTransparent
                     ? 'text-white hover:bg-white/10'
-                    : 'text-stone-800 hover:bg-stone-100'
+                    : 'text-gray-800 hover:bg-gray-100'
                 }`}
                 aria-label="Toggle navigation"
               >
@@ -169,7 +169,7 @@ export function WanderlyNavbar() {
 
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-[#fcfbfa] border-b border-[#e8e4dc] text-stone-900 px-6 py-6 space-y-4 shadow-xl animate-in slide-in-from-top-2">
+          <div className="md:hidden bg-white border-b border-gray-200 text-gray-900 px-6 py-6 space-y-4 shadow-xl animate-in slide-in-from-top-2">
             <nav className="flex flex-col space-y-3">
               {navLinks.map((link) => {
                 const active = isActive(link.href);
@@ -179,7 +179,7 @@ export function WanderlyNavbar() {
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`text-base font-medium py-1.5 transition-colors ${
-                      active ? 'text-[#18281d] font-semibold' : 'text-stone-600'
+                      active ? 'text-black font-semibold' : 'text-gray-600 hover:text-black'
                     }`}
                   >
                     {link.label}
@@ -188,13 +188,13 @@ export function WanderlyNavbar() {
               })}
             </nav>
 
-            <div className="pt-4 border-t border-[#e8e4dc] flex flex-col gap-3">
+            <div className="pt-4 border-t border-gray-200 flex flex-col gap-3">
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   setIsPlanModalOpen(true);
                 }}
-                className="w-full py-3 rounded-full bg-[#18281d] text-white text-center text-sm font-medium hover:bg-[#253d2c] transition"
+                className="w-full py-3 rounded-full bg-black text-white text-center text-sm font-medium hover:bg-gray-800 transition"
               >
                 Plan Your Trip →
               </button>
@@ -204,7 +204,7 @@ export function WanderlyNavbar() {
                     setIsMobileMenuOpen(false);
                     setIsSearchModalOpen(true);
                   }}
-                  className="flex items-center gap-2 text-xs text-stone-600 hover:text-stone-900"
+                  className="flex items-center gap-2 text-xs text-gray-600 hover:text-black"
                 >
                   <Search className="w-4 h-4" />
                   <span>Search Packages</span>

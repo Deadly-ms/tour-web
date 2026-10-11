@@ -65,8 +65,8 @@ export default function TourDetailsPage({ params }: PageProps) {
 
   if (!pkg) {
     return (
-      <div className="min-h-screen bg-[#fcfbfa] flex items-center justify-center">
-        <div className="animate-pulse text-stone-400 font-serif text-lg">
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-pulse text-gray-400 font-medium text-base">
           Loading itinerary...
         </div>
       </div>
@@ -74,7 +74,7 @@ export default function TourDetailsPage({ params }: PageProps) {
   }
 
   return (
-    <main className="flex flex-col w-full overflow-hidden bg-[#fcfbfa] pb-24">
+    <main className="flex flex-col w-full overflow-hidden bg-white pb-24">
       {/* 1. CINEMATIC HERO: Destination image, title, tags, price */}
       <TourDetailsHero pkg={pkg} onPlanClick={() => setIsPlanModalOpen(true)} />
 

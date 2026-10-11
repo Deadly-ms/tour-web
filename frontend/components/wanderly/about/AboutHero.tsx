@@ -25,20 +25,20 @@ export function AboutHero({
   };
 
   return (
-    <section className="pt-28 sm:pt-36 pb-16 sm:pb-20 bg-[#fcfbfa]">
+    <section className="pt-28 sm:pt-36 pb-16 sm:pb-20 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* Left Text */}
           <div className="lg:col-span-6 space-y-6 sm:space-y-8">
             <div className="space-y-4">
-              <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
+              <span className="text-[11px] font-semibold tracking-[0.25em] text-gray-500 uppercase">
                 ABOUT TRACK YOUR TRIP
               </span>
-              <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-normal text-[#18281d] leading-[1.08] tracking-tight">
+              <h1 className="font-sans text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 leading-[1.08] tracking-tight">
                 {titleLine1} <br />
                 {titleLine2}
               </h1>
-              <p className="text-sm sm:text-base text-stone-600 font-light max-w-md leading-relaxed pt-2">
+              <p className="text-sm sm:text-base text-gray-600 font-normal max-w-md leading-relaxed pt-2">
                 {subtitle}
               </p>
             </div>
@@ -47,7 +47,7 @@ export function AboutHero({
             <div className="pt-4">
               <button
                 onClick={handleScrollDown}
-                className="inline-flex items-center gap-2 text-xs font-medium text-stone-500 hover:text-[#18281d] transition-colors group"
+                className="inline-flex items-center gap-2 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors group"
               >
                 <span>Scroll Down</span>
                 <ArrowDown className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" />

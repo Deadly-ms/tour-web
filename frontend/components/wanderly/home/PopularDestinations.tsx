@@ -67,25 +67,25 @@ export function PopularDestinations({
   destinations = DEFAULT_DESTINATIONS,
 }: PopularDestinationsProps) {
   return (
-    <section className="py-20 sm:py-24 bg-[#fcfbfa]">
+    <section className="py-20 sm:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Section Header */}
         <Reveal className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
-          <div className="space-y-2">
-            <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
+          <div className="space-y-3">
+            <span className="text-sm uppercase tracking-widest text-gray-500">
               {tag}
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#18281d] tracking-tight">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
               {title}
             </h2>
           </div>
           <div className="lg:max-w-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <p className="text-xs sm:text-sm text-stone-500 font-light leading-relaxed">
+            <p className="text-sm text-gray-600 leading-relaxed">
               {description}
             </p>
             <Link
               href="/tour-packages"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-[#18281d] hover:text-[#c58b59] transition-colors whitespace-nowrap shrink-0 group"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-black hover:text-gray-600 transition-colors whitespace-nowrap shrink-0 group"
             >
               <span>View All Destinations</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -127,7 +127,7 @@ function DestinationCard({
   return (
     <Link
       href={item.href}
-      className={`group relative ${heightClass} w-full rounded-2xl sm:rounded-3xl overflow-hidden block bg-stone-200 shadow-sm hover:shadow-md transition-all duration-300`}
+      className={`group relative ${heightClass} w-full rounded-2xl sm:rounded-3xl overflow-hidden block bg-gray-100 shadow-sm hover:shadow-md transition-all duration-300`}
     >
       <Parallax>
         <Image
@@ -143,16 +143,16 @@ function DestinationCard({
       {/* Card Content at Bottom */}
       <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 flex items-end justify-between text-white">
         <div>
-          <h3 className="font-serif text-xl sm:text-2xl font-normal text-white mb-1.5">
+          <h3 className="text-xl sm:text-2xl font-bold text-white mb-1.5">
             {item.name}
           </h3>
-          <p className="text-[11px] sm:text-xs text-white/75 font-light tracking-wide">
+          <p className="text-xs text-white/80 font-normal tracking-wide">
             {item.tags.join(' • ')}
           </p>
         </div>
 
         {/* Circular Action Button */}
-        <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center group-hover:bg-white group-hover:text-[#18281d] group-hover:scale-110 transition-all duration-300 shrink-0">
+        <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:scale-110 transition-all duration-300 shrink-0">
           <ArrowUpRight className="w-4 h-4" />
         </div>
       </div>

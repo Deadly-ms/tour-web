@@ -93,13 +93,13 @@ export function TourHotelsSection({
   }
 
   return (
-    <section id="hotels" className="space-y-6 pt-10 border-t border-[#e8e4dc]">
+    <section id="hotels" className="space-y-6 pt-10 border-t border-gray-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#18281d]">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
             {title}
           </h2>
-          <p className="text-xs sm:text-sm text-stone-500 font-light pt-1">
+          <p className="text-xs sm:text-sm text-gray-500 font-normal pt-1">
             {subtitle}
           </p>
         </div>
@@ -109,9 +109,9 @@ export function TourHotelsSection({
         {displayHotels.map((hotel, idx) => (
           <div
             key={idx}
-            className="group bg-white rounded-2xl overflow-hidden border border-[#e8e4dc] shadow-sm flex flex-col"
+            className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm flex flex-col"
           >
-            <div className="relative h-48 w-full bg-stone-100">
+            <div className="relative h-48 w-full bg-gray-100">
               <Image
                 src={hotel.image || FALLBACK_HOTEL_IMAGES[idx % FALLBACK_HOTEL_IMAGES.length]}
                 alt={hotel.name}
@@ -126,13 +126,13 @@ export function TourHotelsSection({
             </div>
 
             <div className="p-4 space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#c58b59]">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
                 {hotel.category || 'Handpicked Stay'}
               </span>
-              <h3 className="font-serif text-base font-medium text-stone-900">
+              <h3 className="text-base font-bold text-gray-900">
                 {hotel.name}
               </h3>
-              <p className="text-xs text-stone-400 flex items-center gap-1">
+              <p className="text-xs text-gray-400 flex items-center gap-1">
                 <MapPin className="w-3 h-3" />
                 <span>{hotel.location || pkg?.destination || 'Destination'}</span>
               </p>

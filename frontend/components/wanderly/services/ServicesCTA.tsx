@@ -109,29 +109,29 @@ export function ServicesCTA({
   return (
     <section
       ref={root}
-      className="relative flex min-h-[90svh] items-center overflow-hidden rounded-t-[2.5rem] bg-[#18281d] py-28 text-white sm:rounded-t-[4rem] sm:py-40"
+      className="relative flex min-h-[90svh] items-center overflow-hidden rounded-t-[2.5rem] bg-black py-28 text-white sm:rounded-t-[4rem] sm:py-40"
     >
       {/* Giant outlined word behind the content */}
       <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center">
         <span
           data-bg-word
-          className="whitespace-nowrap font-serif text-[30vw] italic leading-none text-transparent [-webkit-text-stroke:1px_rgba(197,139,89,0.35)]"
+          className="whitespace-nowrap text-[30vw] font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.12)]"
         >
           Journey&nbsp;Journey
         </span>
       </div>
-      <div className="pointer-events-none absolute -top-40 -left-40 h-[480px] w-[480px] rounded-full bg-[#c58b59]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-40 -left-40 h-[480px] w-[480px] rounded-full bg-white/5 blur-3xl" />
 
       <div className="relative mx-auto w-full max-w-5xl space-y-10 px-6 text-center sm:px-8">
-        <div data-cta-fade className="flex items-center justify-center gap-4">
-          <span className="h-px w-10 bg-[#c58b59]" />
-          <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#c58b59]">
+        <div data-cta-fade className="flex items-center justify-center gap-3">
+          <span className="h-px w-8 bg-gray-600" />
+          <span className="text-sm font-semibold uppercase tracking-widest text-gray-400">
             Start here
           </span>
-          <span className="h-px w-10 bg-[#c58b59]" />
+          <span className="h-px w-8 bg-gray-600" />
         </div>
 
-        <h2 className="font-serif text-4xl font-normal leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
+        <h2 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
           {words.map((w, i) => (
             <span key={i} data-word className="mr-[0.25em] inline-block">
               {w}
@@ -139,7 +139,7 @@ export function ServicesCTA({
           ))}
         </h2>
 
-        <p data-cta-fade className="mx-auto max-w-md text-sm font-light leading-relaxed text-stone-300 sm:text-base">
+        <p data-cta-fade className="mx-auto max-w-md text-sm font-normal leading-relaxed text-gray-300 sm:text-base">
           {subtitle}
         </p>
 
@@ -147,7 +147,7 @@ export function ServicesCTA({
           <Link
             ref={btn}
             href={buttonHref}
-            className="group flex h-36 w-36 flex-col items-center justify-center gap-1.5 rounded-full bg-[#c58b59] text-sm font-medium tracking-wide text-[#18281d] shadow-[0_30px_60px_-20px_rgba(197,139,89,0.6)] transition-colors duration-300 hover:bg-[#d49a68] sm:h-40 sm:w-40"
+            className="group flex h-36 w-36 flex-col items-center justify-center gap-1.5 rounded-full bg-white text-sm font-bold tracking-wide text-black shadow-2xl transition-colors duration-300 hover:bg-gray-100 sm:h-40 sm:w-40"
           >
             <span>{buttonText}</span>
             <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">→</span>

@@ -115,7 +115,7 @@ export function TourCard({ tour, onViewItinerary, onBookNow }: TourCardProps) {
           <div>
             <span className="text-[11px] font-medium text-slate-500 block">Starting from</span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-black text-slate-900 font-serif">
+              <span className="text-2xl font-black text-slate-900 font-sans font-bold">
                 ₹{tour.price.toLocaleString('en-IN')}
               </span>
               {tour.originalPrice && (

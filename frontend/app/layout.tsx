@@ -72,7 +72,7 @@ export default function RootLayout({
       lang="en"
       className={`${plusJakarta.variable} h-full antialiased font-sans`}
     >
-      <body className="min-h-full flex flex-col bg-[#fcfbfa] text-stone-900 font-sans selection:bg-[#18281d] selection:text-white">
+      <body className="min-h-full flex flex-col bg-white text-gray-900 font-sans selection:bg-black selection:text-white">
         <ClerkWrapper>
           <ToastProvider>
             <SmoothScroll>

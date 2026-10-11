@@ -17,7 +17,7 @@ export default function NotFound() {
   }, []);
 
   return (
-    <section className="relative flex-1 overflow-hidden bg-[#faf8f4]">
+    <section className="relative flex-1 overflow-hidden bg-white">
       <style>{`
         @keyframes nf-fade-up {
           from { opacity: 0; transform: translateY(16px); }
@@ -55,7 +55,7 @@ export default function NotFound() {
         {/* Soft fade from video into the page background */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-[#faf8f4]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-white"
         />
       </div>
 
@@ -65,23 +65,23 @@ export default function NotFound() {
           className="nf-fade-up flex items-center justify-center gap-3"
           style={{ animationDelay: '0.1s' }}
         >
-          <span className="h-px w-8 bg-[#b08d57]" />
-          <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#8a6d3b]">
+          <span className="h-px w-8 bg-gray-300" />
+          <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gray-500">
             Error 404
           </span>
-          <span className="h-px w-8 bg-[#b08d57]" />
+          <span className="h-px w-8 bg-gray-300" />
         </div>
 
         <h1
-          className="nf-fade-up mb-3 mt-4 font-serif text-3xl font-medium leading-[1.1] tracking-tight text-slate-900 sm:text-5xl"
+          className="nf-fade-up mb-3 mt-4 text-3xl font-bold leading-[1.1] tracking-tight text-gray-900 sm:text-5xl"
           style={{ animationDelay: '0.2s' }}
         >
           This path leads{' '}
-          <span className="italic text-teal-700">elsewhere</span>
+          <span className="italic text-gray-700">elsewhere</span>
         </h1>
 
         <p
-          className="nf-fade-up mx-auto mb-7 max-w-md text-base leading-relaxed text-slate-500"
+          className="nf-fade-up mx-auto mb-7 max-w-md text-base leading-relaxed text-gray-600"
           style={{ animationDelay: '0.3s' }}
         >
           The page or journey you are looking for has moved or does not exist.
@@ -94,7 +94,7 @@ export default function NotFound() {
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-lg shadow-slate-900/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-full bg-black px-8 py-3.5 text-sm font-medium tracking-wide text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-800"
           >
             <Home className="h-4 w-4" />
             Return Home
@@ -102,7 +102,7 @@ export default function NotFound() {
 
           <Link
             href="/tour-packages"
-            className="group inline-flex items-center gap-2 rounded-full border border-[#d9c3a0] bg-white/60 px-8 py-3.5 text-sm font-medium tracking-wide text-slate-800 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-teal-600 hover:text-teal-800"
+            className="group inline-flex items-center gap-2 rounded-full border border-black bg-white px-8 py-3.5 text-sm font-medium tracking-wide text-black transition-all duration-300 hover:-translate-y-0.5 hover:bg-black hover:text-white"
           >
             Explore Tour Packages
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

@@ -7,7 +7,7 @@ import { getAllTourPackages } from '@/services/tour.service';
 import { gsap, useGSAP, MOTION_OK } from '@/lib/gsap';
 
 const inputClass =
-  'w-full bg-[#fcfbfa] border border-[#e8e4dc] rounded-xl px-4 py-2.5 text-xs sm:text-sm text-stone-800 transition-[border-color,box-shadow,background-color] duration-300 focus:outline-none focus:bg-white focus:border-[#c58b59] focus:ring-4 focus:ring-[#c58b59]/10';
+  'w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-gray-900 transition-[border-color,box-shadow,background-color] duration-300 focus:outline-none focus:bg-white focus:border-black focus:ring-4 focus:ring-black/10';
 
 export default function ContactPage() {
   const { showToast } = useToast();
@@ -184,14 +184,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main ref={root} className="relative overflow-hidden pt-10 sm:pt-14 pb-24 bg-[#fcfbfa] min-h-screen">
-      {/* Very soft warm light behind the form */}
-      <div
-        data-glow
-        aria-hidden
-        className="pointer-events-none absolute -top-20 -right-40 w-[620px] h-[620px] rounded-full bg-[#c58b59]/[0.07] blur-3xl"
-      />
-
+    <main ref={root} className="relative overflow-hidden pt-10 sm:pt-14 pb-24 bg-white min-h-screen">
       <div className="relative max-w-7xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column: Narrative & Contacts */}
@@ -199,11 +192,11 @@ export default function ContactPage() {
             <div className="space-y-4">
               <span
                 data-fade
-                className="block text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase"
+                className="block text-sm uppercase tracking-widest text-gray-500"
               >
                 GET IN TOUCH
               </span>
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal text-[#18281d] leading-tight tracking-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
                 <span className="block overflow-hidden pb-[0.12em]">
                   <span data-line className="block">Let&apos;s plan your</span>
                 </span>
@@ -213,24 +206,24 @@ export default function ContactPage() {
               </h1>
               <p
                 data-fade
-                className="text-xs sm:text-sm text-stone-500 font-light leading-relaxed max-w-sm"
+                className="text-sm text-gray-600 leading-relaxed max-w-sm"
               >
                 Have a question about a journey, need a personalized recommendation, or want to customize an itinerary? We are here to help.
               </p>
             </div>
 
             <div className="space-y-6 pt-4">
-              <div data-rule aria-hidden className="h-px w-full bg-[#e8e4dc]" />
+              <div data-rule aria-hidden className="h-px w-full bg-gray-200" />
 
               <div data-contact-row className="group flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white border border-[#e8e4dc] flex items-center justify-center shadow-sm shrink-0 transition-colors duration-300 group-hover:bg-[#18281d] group-hover:border-[#18281d]">
-                  <PhoneCall className="w-4 h-4 text-[#c58b59] transition-colors duration-300 group-hover:text-white" />
+                <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center shadow-sm shrink-0 transition-colors duration-300 group-hover:bg-black group-hover:border-black">
+                  <PhoneCall className="w-4 h-4 text-black transition-colors duration-300 group-hover:text-white" />
                 </div>
                 <div>
-                  <h4 className="font-serif text-sm font-medium text-stone-900">Direct Helpline</h4>
+                  <h4 className="text-sm font-bold text-gray-900">Direct Helpline</h4>
                   <a
                     href="tel:+919876543210"
-                    className="text-xs text-stone-500 font-light mt-0.5 block hover:text-[#18281d] transition-colors"
+                    className="text-xs text-gray-600 font-normal mt-0.5 block hover:text-black transition-colors"
                   >
                     +91 98765 43210 (24/7 Assistance)
                   </a>
@@ -238,14 +231,14 @@ export default function ContactPage() {
               </div>
 
               <div data-contact-row className="group flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white border border-[#e8e4dc] flex items-center justify-center shadow-sm shrink-0 transition-colors duration-300 group-hover:bg-[#18281d] group-hover:border-[#18281d]">
-                  <Mail className="w-4 h-4 text-[#c58b59] transition-colors duration-300 group-hover:text-white" />
+                <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center shadow-sm shrink-0 transition-colors duration-300 group-hover:bg-black group-hover:border-black">
+                  <Mail className="w-4 h-4 text-black transition-colors duration-300 group-hover:text-white" />
                 </div>
                 <div>
-                  <h4 className="font-serif text-sm font-medium text-stone-900">Email Inquiries</h4>
+                  <h4 className="text-sm font-bold text-gray-900">Email Inquiries</h4>
                   <a
                     href="mailto:concierge@trackyourtrip.com"
-                    className="text-xs text-stone-500 font-light mt-0.5 block hover:text-[#18281d] transition-colors"
+                    className="text-xs text-gray-600 font-normal mt-0.5 block hover:text-black transition-colors"
                   >
                     concierge@trackyourtrip.com
                   </a>
@@ -253,12 +246,12 @@ export default function ContactPage() {
               </div>
 
               <div data-contact-row className="group flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white border border-[#e8e4dc] flex items-center justify-center shadow-sm shrink-0 transition-colors duration-300 group-hover:bg-[#18281d] group-hover:border-[#18281d]">
-                  <MapPin className="w-4 h-4 text-[#c58b59] transition-colors duration-300 group-hover:text-white" />
+                <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center shadow-sm shrink-0 transition-colors duration-300 group-hover:bg-black group-hover:border-black">
+                  <MapPin className="w-4 h-4 text-black transition-colors duration-300 group-hover:text-white" />
                 </div>
                 <div>
-                  <h4 className="font-serif text-sm font-medium text-stone-900">Curator Studios</h4>
-                  <p className="text-xs text-stone-500 font-light mt-0.5">Jaipur • Kochi • New Delhi</p>
+                  <h4 className="text-sm font-bold text-gray-900">Curator Studios</h4>
+                  <p className="text-xs text-gray-600 font-normal mt-0.5">Jaipur • Kochi • New Delhi</p>
                 </div>
               </div>
             </div>
@@ -269,7 +262,7 @@ export default function ContactPage() {
             <div
               ref={formCard}
               data-form-card
-              className="bg-white border border-[#e8e4dc] rounded-3xl p-8 sm:p-10 shadow-[0_40px_80px_-40px_rgba(24,40,29,0.3)]"
+              className="bg-white border border-gray-200 rounded-3xl p-8 sm:p-10 shadow-lg"
             >
               {isSent ? (
                 <div className="py-16 text-center space-y-4">
@@ -279,21 +272,21 @@ export default function ContactPage() {
                   >
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <h3 data-success-fade className="font-serif text-3xl text-[#18281d]">Thank You!</h3>
-                  <p data-success-fade className="text-xs sm:text-sm text-stone-600 max-w-md mx-auto">
+                  <h3 data-success-fade className="text-3xl font-bold text-gray-900">Thank You!</h3>
+                  <p data-success-fade className="text-sm text-gray-600 max-w-md mx-auto">
                     Your inquiry has been received. One of our dedicated journey specialists will reach out to you within 24 hours.
                   </p>
                   <button
                     data-success-fade
                     onClick={handleReset}
-                    className="mt-4 px-6 py-2 rounded-full border border-stone-300 text-xs font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+                    className="mt-4 px-6 py-2 rounded-full border border-gray-300 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors"
                   >
                     Send Another Message
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
-                  <h3 data-form-field className="font-serif text-2xl font-normal text-[#18281d]">
+                  <h3 data-form-field className="text-2xl font-bold text-gray-900">
                     Send us a message
                   </h3>
 
@@ -309,7 +302,7 @@ export default function ContactPage() {
 
                   <div data-form-field className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="contact-name" className="block text-xs font-medium text-stone-700 mb-1.5">Your Name</label>
+                      <label htmlFor="contact-name" className="block text-xs font-semibold text-gray-700 mb-1.5">Your Name</label>
                       <input
                         id="contact-name"
                         type="text"
@@ -321,7 +314,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="contact-email" className="block text-xs font-medium text-stone-700 mb-1.5">Email Address</label>
+                      <label htmlFor="contact-email" className="block text-xs font-semibold text-gray-700 mb-1.5">Email Address</label>
                       <input
                         id="contact-email"
                         type="email"
@@ -336,7 +329,7 @@ export default function ContactPage() {
 
                   <div data-form-field className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="contact-phone" className="block text-xs font-medium text-stone-700 mb-1.5">Phone Number</label>
+                      <label htmlFor="contact-phone" className="block text-xs font-semibold text-gray-700 mb-1.5">Phone Number</label>
                       <input
                         id="contact-phone"
                         type="tel"
@@ -347,7 +340,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="contact-destination" className="block text-xs font-medium text-stone-700 mb-1.5">Destination of Interest</label>
+                      <label htmlFor="contact-destination" className="block text-xs font-semibold text-gray-700 mb-1.5">Destination of Interest</label>
                       <select
                         id="contact-destination"
                         value={destination}
@@ -365,7 +358,7 @@ export default function ContactPage() {
                   </div>
 
                   <div data-form-field>
-                    <label htmlFor="contact-message" className="block text-xs font-medium text-stone-700 mb-1.5">Tell us about your trip</label>
+                    <label htmlFor="contact-message" className="block text-xs font-semibold text-gray-700 mb-1.5">Tell us about your trip</label>
                     <textarea
                       id="contact-message"
                       rows={4}
@@ -381,7 +374,7 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="px-8 py-3 rounded-full bg-[#18281d] text-white text-xs sm:text-sm font-medium hover:bg-[#c58b59] transition-colors duration-300 shadow-md flex items-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-8 py-3 rounded-full bg-black text-white text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors duration-300 shadow-md flex items-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? (
                         <>
