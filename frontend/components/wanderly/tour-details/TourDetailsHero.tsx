@@ -35,7 +35,7 @@ export function TourDetailsHero({ pkg, onPlanClick }: TourDetailsHeroProps) {
           </div>
 
           {/* Large Title */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.08] tracking-tight drop-shadow-md">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.08] tracking-tight drop-shadow-md">
             {pkg.title}
           </h1>
 

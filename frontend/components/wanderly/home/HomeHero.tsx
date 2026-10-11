@@ -153,8 +153,8 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
           </div>
 
           <h1 data-hero-anim className="text-5xl sm:text-7xl lg:text-[84px] text-white font-bold leading-[1.05] tracking-tight drop-shadow-sm">
-            {slide.titleLine1} <br />
-            {slide.titleLine2}
+            <span className="text-white">{slide.titleLine1}</span> <br />
+            <span className="text-white">{slide.titleLine2}</span>
           </h1>
 
           <p data-hero-anim className="text-white/90 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-lg drop-shadow-sm">

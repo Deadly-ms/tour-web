@@ -84,7 +84,7 @@ export function SectionHeader({
       <p data-eyebrow className="relative z-10 text-sm uppercase tracking-widest text-gray-500 mb-4">
         {eyebrow}
       </p>
-      <h2 className="relative z-10 text-4xl md:text-5xl font-bold leading-tight">
+      <h2 className="relative z-10 text-4xl md:text-5xl font-bold leading-tight text-gray-900">
         {lines.map((line, i) => (
           <span key={i} className="block overflow-hidden pb-[0.1em]">
             <span data-line className="block">

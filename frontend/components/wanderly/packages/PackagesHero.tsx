@@ -40,8 +40,8 @@ export function PackagesHero({
           </span>
         </div>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white drop-shadow-sm">
-          {titleLine1} <br />
-          {titleLine2}
+          <span className="text-white">{titleLine1}</span> <br />
+          <span className="text-white">{titleLine2}</span>
         </h1>
         <p className="text-sm md:text-base text-white/90 font-normal max-w-lg mx-auto leading-relaxed">
           {subtitle}

@@ -136,7 +136,7 @@ export function ServicesHero({
             {tag}
           </p>
 
-          <h1 className="relative z-10 text-4xl md:text-5xl font-bold leading-tight mb-6">
+          <h1 className="relative z-10 text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
             <span className="block overflow-hidden pb-[0.1em]">
               <span data-line className="block">{titleLine1}</span>
             </span>

@@ -37,21 +37,23 @@ html.lenis body {
   overflow: hidden;
 }
 
-html {
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
-}
+@layer base {
+  html {
+    font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  }
 
-body {
-  background-color: var(--background);
-  color: #4b5563;
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  body {
+    background-color: var(--background);
+    color: #4b5563;
+    font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
-  color: #111827;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+    color: inherit;
+  }
 }
 
 /* Custom smooth scrollbar */
