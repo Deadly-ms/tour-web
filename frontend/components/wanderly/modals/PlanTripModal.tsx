@@ -208,7 +208,7 @@ export function PlanTripModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div data-lenis-prevent className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
         className="relative w-full max-w-xl bg-[#fcfbfa] border border-[#e8e4dc] rounded-3xl p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}

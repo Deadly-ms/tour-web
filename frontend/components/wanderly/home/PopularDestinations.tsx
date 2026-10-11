@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import { Reveal, RevealGroup } from '@/components/animation/Reveal';
+import { Parallax } from '@/components/animation/Parallax';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
@@ -68,7 +70,7 @@ export function PopularDestinations({
     <section className="py-20 sm:py-24 bg-[#fcfbfa]">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
+        <Reveal className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
           <div className="space-y-2">
             <span className="text-[11px] font-semibold tracking-[0.25em] text-[#c58b59] uppercase">
               {tag}
@@ -89,10 +91,10 @@ export function PopularDestinations({
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
-        </div>
+        </Reveal>
 
         {/* Asymmetrical 5-Item Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6">
+        <RevealGroup className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6" stagger={0.15}>
           {/* Top Row: 3 items (Cols 4, 4, 4) */}
           {destinations.slice(0, 3).map((item) => (
             <div key={item.id} className="md:col-span-4">
@@ -109,7 +111,7 @@ export function PopularDestinations({
               <DestinationCard item={item} heightClass="h-64 sm:h-72" />
             </div>
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );
@@ -127,12 +129,14 @@ function DestinationCard({
       href={item.href}
       className={`group relative ${heightClass} w-full rounded-2xl sm:rounded-3xl overflow-hidden block bg-stone-200 shadow-sm hover:shadow-md transition-all duration-300`}
     >
-      <Image
-        src={item.image}
-        alt={item.name}
-        fill
-        className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-      />
+      <Parallax>
+        <Image
+          src={item.image}
+          alt={item.name}
+          fill
+          className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+        />
+      </Parallax>
       {/* Dark gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
 

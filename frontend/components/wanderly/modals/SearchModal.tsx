@@ -46,7 +46,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     : allPackages.slice(0, 4);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div data-lenis-prevent className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
         className="relative w-full max-w-2xl bg-[#fcfbfa] border border-[#e8e4dc] rounded-3xl p-6 shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}

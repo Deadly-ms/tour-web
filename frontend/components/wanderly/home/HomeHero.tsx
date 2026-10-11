@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { gsap, useGSAP, MOTION_OK } from '@/lib/gsap';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Play, Pause, Volume2, VolumeX, MapPin } from 'lucide-react';
@@ -67,7 +68,6 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
-  // Auto slide advance every 8 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlideIndex((prev) => (prev + 1) % slides.length);
@@ -77,9 +77,60 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
 
   const slide = slides[currentSlideIndex];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Text slides up on first load and on every slide change
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        gsap.from('[data-hero-anim]', {
+          y: 36,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.12,
+          ease: 'power3.out',
+        });
+      });
+    },
+    { scope: contentRef, dependencies: [currentSlideIndex], revertOnUpdate: true }
+  );
+
+  // On scroll: hero shrinks into a rounded card, text drifts up and fades
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        const trigger = {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        };
+        gsap.to(sectionRef.current, {
+          scale: 0.9,
+          borderRadius: 48,
+          transformOrigin: 'center top',
+          ease: 'none',
+          scrollTrigger: trigger,
+        });
+        gsap.to(contentRef.current, {
+          yPercent: -25,
+          opacity: 0,
+          ease: 'none',
+          scrollTrigger: { ...trigger, end: 'bottom 40%' },
+        });
+      });
+    },
+    { scope: sectionRef }
+  );
+
   return (
-    <section className="relative w-full h-[92vh] min-h-[640px] max-h-[960px] flex items-center justify-center overflow-hidden bg-stone-900 select-none">
-      {/* Background Images with smooth fade */}
+    <section
+      ref={sectionRef}
+      className="relative w-full h-[92vh] min-h-[640px] max-h-[960px] flex items-center justify-center overflow-hidden bg-stone-900 select-none will-change-transform"
+    >
       {slides.map((s, index) => (
         <div
           key={s.image}
@@ -87,42 +138,30 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
             index === currentSlideIndex ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105 pointer-events-none'
           } transform transition-transform duration-[8000ms]`}
         >
-          <Image
-            src={s.image}
-            alt={s.location}
-            fill
-            priority={index === 0}
-            className="object-cover object-center"
-          />
-          {/* Subtle gradient vignette overlay */}
+          <Image src={s.image} alt={s.location} fill priority={index === 0} className="object-cover object-center" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/40" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/30" />
         </div>
       ))}
 
-      {/* Main Hero Content */}
-      <div className="relative z-20 max-w-7xl w-full mx-auto px-6 sm:px-8 pt-16 sm:pt-20">
+      <div ref={contentRef} className="relative z-20 max-w-7xl w-full mx-auto px-6 sm:px-8 pt-16 sm:pt-20">
         <div className="max-w-2xl space-y-4 sm:space-y-6">
-          {/* Uppercase Tag */}
-          <div className="inline-block">
+          <div data-hero-anim className="inline-block">
             <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] text-white/90 uppercase border-b border-white/30 pb-0.5">
               {slide.tag}
             </span>
           </div>
 
-          {/* Heading */}
-          <h1 className="font-serif text-5xl sm:text-7xl lg:text-[84px] text-white font-normal leading-[1.05] tracking-tight drop-shadow-sm">
+          <h1 data-hero-anim className="font-serif text-5xl sm:text-7xl lg:text-[84px] text-white font-normal leading-[1.05] tracking-tight drop-shadow-sm">
             {slide.titleLine1} <br />
             {slide.titleLine2}
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-white/85 text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-lg drop-shadow-sm">
+          <p data-hero-anim className="text-white/85 text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-lg drop-shadow-sm">
             {slide.subtitle}
           </p>
 
-          {/* CTA Pill Button */}
-          <div className="pt-2 sm:pt-4">
+          <div data-hero-anim className="pt-2 sm:pt-4">
             <Link
               href={slide.ctaHref}
               className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#18281d]/90 hover:bg-[#18281d] text-white text-xs sm:text-sm font-medium tracking-wide backdrop-blur-md border border-white/20 transition-all duration-300 hover:shadow-xl group"
@@ -136,9 +175,7 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
         </div>
       </div>
 
-      {/* Bottom Controls Bar */}
       <div className="absolute bottom-8 left-0 right-0 z-20 max-w-7xl mx-auto px-6 sm:px-8 flex items-end justify-between text-white">
-        {/* Slide Counter on Left */}
         <div className="flex items-center gap-4">
           <span className="font-mono text-xs tracking-wider font-light text-white/90">
             0{currentSlideIndex + 1} &nbsp;/&nbsp; 0{slides.length}
@@ -157,7 +194,6 @@ export function HomeHero({ slides = DEFAULT_SLIDES }: HomeHeroProps) {
           </div>
         </div>
 
-        {/* Location & Interactive Audio/Play Badge on Right */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-xs text-white/90">
             <MapPin className="w-3.5 h-3.5 text-[#c58b59]" />

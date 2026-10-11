@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -9,9 +9,10 @@ import {
   Hotel,
   Car,
   Sparkles,
-  ArrowRight,
   ArrowUpRight,
 } from 'lucide-react';
+import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap';
+import { Reveal } from '@/components/animation/Reveal';
 
 export interface ServiceItem {
   id: string;
@@ -87,94 +88,277 @@ interface ServicesShowcaseProps {
   services?: ServiceItem[];
 }
 
+const pad = (n: number) => String(n).padStart(2, '0');
+
 export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowcaseProps) {
-  const [selectedIndex, setSelectedIndex] = useState(2); // Default to Hotel & Stays as shown in image
-  const selected = services[selectedIndex];
+  const n = services.length;
+  const root = useRef<HTMLElement>(null);
+  const stRef = useRef<ScrollTrigger | null>(null);
+  const [reduce, setReduce] = useState(false);
+
+  // People who prefer reduced motion get a plain list instead of the pinned reel
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduce(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  useGSAP(
+    () => {
+      if (reduce || !root.current) return;
+      const mm = gsap.matchMedia();
+
+      mm.add('(min-width: 768px)', () => {
+        const q = gsap.utils.selector(root.current!);
+        const scene = q('[data-scene]')[0];
+        const slides = q('[data-slide]');
+        const imgs = q('[data-img]');
+        const names = q('[data-name]');
+        const infos = q('[data-info]');
+        const col = q('[data-count-col]');
+        const bar = q('[data-progress]');
+        if (!scene || !slides.length) return;
+
+        const STEP = 1.6; // timeline length of one service (1 = animation, 0.6 = rest)
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: scene,
+            start: 'top top',
+            end: `+=${n * 85}%`,
+            pin: true,
+            scrub: 1,
+            snap: {
+              snapTo: 'labelsDirectional',
+              duration: { min: 0.2, max: 0.6 },
+              delay: 0.05,
+              ease: 'power1.inOut',
+            },
+          },
+        });
+
+        tl.addLabel('s0', 0);
+
+        slides.forEach((_, i) => {
+          if (i === 0) return;
+          const at = i * STEP;
+          tl.addLabel(`s${i}`, at)
+            // new photo wipes up over the old one while it settles
+            .fromTo(
+              slides[i],
+              { clipPath: 'inset(100% 0% 0% 0%)' },
+              { clipPath: 'inset(0% 0% 0% 0%)', duration: 1, ease: 'power2.inOut' },
+              at
+            )
+            .fromTo(imgs[i], { scale: 1.3 }, { scale: 1, duration: 1.2, ease: 'power2.out' }, at)
+            // old photo drifts away underneath
+            .to(imgs[i - 1], { scale: 1.12, yPercent: -6, duration: 1, ease: 'power2.inOut' }, at)
+            // list: previous name fades back, new one lights up
+            .to(names[i - 1], { opacity: 0.25, duration: 0.4, ease: 'power2.out' }, at)
+            .to(names[i], { opacity: 1, duration: 0.4, ease: 'power2.out' }, at + 0.3)
+            // caption card swaps
+            .to(infos[i - 1], { autoAlpha: 0, y: -16, duration: 0.3, ease: 'power2.in' }, at)
+            .fromTo(
+              infos[i],
+              { autoAlpha: 0, y: 20 },
+              { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+              at + 0.55
+            )
+            // counter rolls to the next digit
+            .to(col, { yPercent: -(100 / n) * i, duration: 0.7, ease: 'power2.inOut' }, at);
+        });
+
+        tl.to({}, { duration: 0.6 }); // rest on the last service
+        tl.fromTo(bar, { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: tl.duration() }, 0);
+
+        stRef.current = tl.scrollTrigger ?? null;
+        return () => {
+          stRef.current = null;
+        };
+      });
+    },
+    { scope: root, dependencies: [reduce, n], revertOnUpdate: true }
+  );
+
+  // Click a name in the list to scroll straight to that service
+  const jump = (i: number) => {
+    const st = stRef.current;
+    if (!st) return;
+    window.scrollTo({ top: st.labelToScroll(`s${i}`), behavior: 'smooth' });
+  };
 
   return (
-    <section className="py-20 sm:py-24 bg-[#faf8f5] border-y border-[#e8e4dc]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left: Numbered Services List */}
-          <div className="lg:col-span-6 space-y-4">
-            {services.map((item, idx) => {
-              const IconComp = item.icon;
-              const isCurrent = idx === selectedIndex;
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => setSelectedIndex(idx)}
-                  className={`p-5 rounded-2xl cursor-pointer transition-all duration-300 flex items-start gap-4 ${
-                    isCurrent
-                      ? 'bg-white shadow-sm border border-[#e8e4dc]'
-                      : 'hover:bg-white/60 border border-transparent'
-                  }`}
-                >
-                  {/* Number Badge */}
-                  <div className="flex items-center gap-2 pt-0.5 shrink-0">
-                    <span className="font-mono text-xs text-stone-400 font-medium">
-                      {item.number}
+    <section ref={root} className="relative bg-[#fcfbfa]">
+      {/* ───────── Desktop: pinned service reel ───────── */}
+      {!reduce && (
+        <div
+          data-scene
+          className="relative hidden md:flex h-[100svh] min-h-[640px] items-center overflow-hidden"
+        >
+          <div className="max-w-7xl mx-auto w-full px-6 sm:px-8 pt-20">
+            <div className="grid grid-cols-12 gap-10 items-center">
+              {/* Left: names + counter */}
+              <div className="col-span-5">
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="h-px w-10 bg-[#c58b59]" />
+                  <span className="text-[11px] font-semibold tracking-[0.3em] text-[#c58b59] uppercase">
+                    What we do
+                  </span>
+                </div>
+                <p className="font-serif text-2xl xl:text-3xl text-[#18281d] tracking-tight leading-snug mb-8">
+                  Services crafted <span className="italic text-[#c58b59]">around you.</span>
+                </p>
+
+                <ol className="space-y-1.5">
+                  {services.map((s, i) => (
+                    <li key={s.id}>
+                      <button
+                        type="button"
+                        data-name
+                        onClick={() => jump(i)}
+                        style={{ opacity: i === 0 ? 1 : 0.25 }}
+                        className="flex items-baseline gap-4 text-left font-serif text-3xl xl:text-5xl leading-[1.12] tracking-tight text-[#18281d]"
+                      >
+                        <span className="font-mono text-xs text-[#c58b59] tracking-normal">{s.number}</span>
+                        {s.title}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+
+                <div className="mt-10 flex items-center gap-5">
+                  <span className="block h-[1em] overflow-hidden font-serif text-3xl leading-none text-[#18281d]">
+                    <span data-count-col className="block">
+                      {services.map((s) => (
+                        <span key={s.id} className="block h-[1em] leading-none">
+                          {s.number}
+                        </span>
+                      ))}
                     </span>
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
-                      isCurrent ? 'bg-[#18281d] text-white' : 'bg-stone-100 text-stone-600'
-                    }`}>
-                      <IconComp className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  {/* Title & Description */}
-                  <div className="flex-1">
-                    <h3 className={`font-serif text-lg font-medium transition-colors ${
-                      isCurrent ? 'text-[#18281d]' : 'text-stone-800'
-                    }`}>
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-stone-500 font-light mt-0.5 leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* Arrow Indicator */}
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
-                    isCurrent ? 'text-[#18281d]' : 'text-stone-300'
-                  }`}>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Right: Featured Showcase Card */}
-          <div className="lg:col-span-6">
-            <Link
-              href={selected.href}
-              className="group relative h-[440px] sm:h-[520px] w-full rounded-2xl sm:rounded-3xl overflow-hidden block shadow-lg bg-stone-200"
-            >
-              <Image
-                src={selected.showcaseImage}
-                alt={selected.showcaseTitle}
-                fill
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-              {/* Showcase Card Overlay at Bottom */}
-              <div className="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 text-white flex items-end justify-between">
-                <div>
-                  <h4 className="font-serif text-2xl font-normal text-white">
-                    {selected.showcaseTitle}
-                  </h4>
-                  <p className="text-xs text-white/80 font-light mt-1 max-w-sm">
-                    {selected.showcaseDescription}
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-white text-[#18281d] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <ArrowUpRight className="w-4 h-4" />
+                  </span>
+                  <span className="font-mono text-sm text-stone-400">/ {pad(n)}</span>
+                  <span className="relative block h-px w-32 bg-stone-300">
+                    <span
+                      data-progress
+                      className="absolute inset-0 origin-left bg-[#c58b59]"
+                      style={{ transform: 'scaleX(0)' }}
+                    />
+                  </span>
                 </div>
               </div>
-            </Link>
+
+              {/* Right: photo reel */}
+              <div className="col-span-7">
+                <div className="relative h-[68vh] max-h-[620px] min-h-[420px] w-full overflow-hidden rounded-[2rem] bg-stone-200 shadow-[0_50px_90px_-35px_rgba(24,40,29,0.45)]">
+                  {services.map((s, i) => (
+                    <div
+                      key={s.id}
+                      data-slide
+                      className="absolute inset-0"
+                      style={i === 0 ? undefined : { clipPath: 'inset(100% 0% 0% 0%)' }}
+                    >
+                      <div data-img className="absolute inset-0">
+                        <Image
+                          src={s.showcaseImage}
+                          alt={s.showcaseTitle}
+                          fill
+                          priority={i === 0}
+                          sizes="(min-width: 1024px) 58vw, 90vw"
+                          className="object-cover object-center"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10" />
+                    </div>
+                  ))}
+
+                  {/* Caption cards (one visible at a time) */}
+                  {services.map((s, i) => {
+                    const Icon = s.icon;
+                    return (
+                      <div
+                        key={s.id}
+                        data-info
+                        style={i === 0 ? undefined : { opacity: 0, visibility: 'hidden' }}
+                        className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-5 rounded-2xl border border-white/60 bg-white/85 p-5 backdrop-blur-xl"
+                      >
+                        <div className="flex items-center gap-4 min-w-0">
+                          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#18281d] text-white">
+                            <Icon className="h-4 w-4" />
+                          </span>
+                          <div className="min-w-0">
+                            <h3 className="font-serif text-xl text-[#18281d] leading-tight">{s.showcaseTitle}</h3>
+                            <p className="mt-0.5 text-xs font-light text-stone-500 leading-relaxed">
+                              {s.showcaseDescription}
+                            </p>
+                          </div>
+                        </div>
+                        <Link
+                          href={s.href}
+                          className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-[#18281d] py-2 pl-5 pr-2 text-xs font-medium text-white transition-colors duration-300 hover:bg-[#c58b59]"
+                        >
+                          Explore
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:rotate-45">
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </span>
+                        </Link>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      )}
+
+      {/* ───────── Mobile (and reduced motion): simple list ───────── */}
+      <div className={`max-w-7xl mx-auto px-6 sm:px-8 py-20 ${reduce ? '' : 'md:hidden'}`}>
+        <Reveal className="space-y-4 mb-12">
+          <div className="flex items-center gap-4">
+            <span className="h-px w-10 bg-[#c58b59]" />
+            <span className="text-[11px] font-semibold tracking-[0.3em] text-[#c58b59] uppercase">
+              What we do
+            </span>
+          </div>
+          <h2 className="font-serif text-4xl text-[#18281d] tracking-tight leading-[1.08]">
+            Services crafted <span className="italic text-[#c58b59]">around you.</span>
+          </h2>
+        </Reveal>
+
+        <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((s) => {
+            const Icon = s.icon;
+            return (
+              <Reveal key={s.id}>
+                <Link href={s.href} className="group block">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-stone-200">
+                    <Image
+                      src={s.showcaseImage}
+                      alt={s.showcaseTitle}
+                      fill
+                      sizes="(min-width: 640px) 50vw, 100vw"
+                      className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    <span className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-md">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="absolute right-5 top-4 font-serif text-3xl text-white/80">{s.number}</span>
+                  </div>
+                  <div className="space-y-2 pt-5">
+                    <h3 className="font-serif text-3xl text-[#18281d]">{s.title}</h3>
+                    <p className="text-sm font-light leading-relaxed text-stone-500">{s.showcaseDescription}</p>
+                    <span className="inline-flex items-center gap-1.5 pt-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#c58b59]">
+                      Explore <ArrowUpRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                </Link>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import {
-  PartyPopper,
-  Clock,
-  Users,
-  Star,
-} from "lucide-react";
+import { useRef } from "react";
+import { PartyPopper, Clock, Users, Star } from "lucide-react";
+import { gsap, useGSAP, MOTION_OK } from "@/lib/gsap";
+import { SectionHeader } from "@/components/animation/SectionHeader";
 
 type Stat = {
   label: string;
@@ -43,111 +40,97 @@ const stats: Stat[] = [
 ];
 
 const TrustStats = () => {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
-  const [counts, setCounts] = useState(stats.map(() => 0));
+  const root = useRef<HTMLElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
 
-  /* 👁️ Scroll trigger */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        const once = { trigger: grid.current, start: "top 80%", once: true };
 
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  /* 🔢 Count animation */
-  useEffect(() => {
-    if (!visible) return;
-
-    stats.forEach((stat, i) => {
-      const duration = 1500;
-      const startTime = performance.now();
-
-      function animate(time: number) {
-        const progress = Math.min((time - startTime) / duration, 1);
-        const value = Math.floor(progress * stat.value);
-
-        setCounts((prev) => {
-          const updated = [...prev];
-          updated[i] = value;
-          return updated;
+        // Stats rise one by one, their top line draws in, icons pop
+        gsap.from("[data-stat]", {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: once,
+        });
+        gsap.from("[data-stat-line]", {
+          scaleX: 0,
+          transformOrigin: "left center",
+          duration: 1.2,
+          stagger: 0.15,
+          ease: "power3.inOut",
+          scrollTrigger: once,
+        });
+        gsap.from("[data-stat-icon]", {
+          scale: 0.4,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "back.out(2)",
+          scrollTrigger: once,
         });
 
-        if (progress < 1) requestAnimationFrame(animate);
-      }
-
-      requestAnimationFrame(animate);
-    });
-  }, [visible]);
+        // Numbers count up smoothly (no React re-renders)
+        gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
+          const end = Number(el.dataset.value);
+          const suffix = el.dataset.suffix ?? "";
+          const obj = { v: 0 };
+          el.textContent = `0${suffix}`;
+          gsap.to(obj, {
+            v: end,
+            duration: 2.2,
+            ease: "power2.out",
+            onUpdate: () => {
+              el.textContent = `${Math.round(obj.v)}${suffix}`;
+            },
+            scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          });
+        });
+      });
+    },
+    { scope: root }
+  );
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-24 bg-white overflow-hidden mb-20 mt-20"
-    >
-      {/* Background glow */}
-      <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl opacity-40" />
-      <div className="absolute bottom-0 -left-24 w-72 h-72 rounded-full blur-3xl opacity-40" />
-
+    <section ref={root} className="relative py-24 bg-white overflow-hidden mb-20 mt-20">
       <div className="relative max-w-7xl mx-auto px-6">
-        {/* Heading */}
-        {/* <div className="text-center mb-16">
-          <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">
-            Trusted Excellence
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold">
-            Proven Event Decoration Expertise
-          </h2>
-        </div> */}
-
-        <div className="relative mb-10">
-            <h1 className="absolute -top-24 right-0 text-[140px] font-bold text-gray-100 select-none">
-              05
-            </h1>
-
-            <p className="text-sm uppercase tracking-widest text-gray-500 mb-4">
-              Trusted Excellence
-            </p>
-
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-              Proven Event Decoration Expertise
-            </h2>
-          </div>
+        <SectionHeader
+          number="05"
+          eyebrow="Trusted Excellence"
+          lines={["Proven Event", "Decoration Expertise"]}
+        />
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 mt-20 md:grid-cols-4 gap-12 text-center">
+        <div ref={grid} className="grid grid-cols-2 mt-20 md:grid-cols-4 gap-12 text-center">
           {stats.map((stat, i) => (
-            <div
-              key={i}
-              className={`transition-all duration-700 ${
-                visible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
-              }`}
-            >
+            <div key={i} data-stat className="relative pt-8">
+              <div className="absolute top-0 inset-x-0 h-px">
+                <span data-stat-line className="block h-full w-full bg-gray-300" />
+              </div>
+
               {/* Icon */}
-              <div className="flex justify-center mb-5">
+              <div data-stat-icon className="flex justify-center mb-5">
                 {stat.icon}
               </div>
 
               {/* Number */}
-              <h3 className="text-5xl font-bold text-gray-700">
-                {counts[i]}
+              <h3
+                data-count
+                data-value={stat.value}
+                data-suffix={stat.suffix ?? ""}
+                className="text-5xl font-bold text-gray-700"
+              >
+                {stat.value}
                 {stat.suffix}
               </h3>
 
               {/* Label */}
-              <p className="mt-3 text-gray-500">
-                {stat.label}
-              </p>
+              <p className="mt-3 text-gray-500">{stat.label}</p>
             </div>
           ))}
         </div>

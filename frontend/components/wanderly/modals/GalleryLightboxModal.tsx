@@ -47,7 +47,7 @@ export function GalleryLightboxModal({
   const current = images[currentIndex];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200">
+    <div data-lenis-prevent className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200">
       {/* Close button */}
       <button
         onClick={onClose}

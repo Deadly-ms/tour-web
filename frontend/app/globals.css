@@ -23,8 +23,21 @@
   --border: #e8e4dc;
 }
 
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 html {
-  scroll-behavior: smooth;
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
 }
 

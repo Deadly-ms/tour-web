@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { SmoothScroll } from '@/components/animation/SmoothScroll';
 import { ClerkWrapper } from '@/components/layout/ClerkWrapper';
 import { ToastProvider } from '@/components/ui/Toast';
 import { Navbar } from '@/components/layout/Navbar';
@@ -74,9 +75,11 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-[#fcfbfa] text-stone-900 font-sans selection:bg-[#18281d] selection:text-white">
         <ClerkWrapper>
           <ToastProvider>
-            <Navbar />
-            <div className="flex-1 flex flex-col">{children}</div>
-            <Footer />
+            <SmoothScroll>
+              <Navbar />
+              <div className="flex-1 flex flex-col">{children}</div>
+              <Footer />
+            </SmoothScroll>
           </ToastProvider>
         </ClerkWrapper>
       </body>

@@ -8,7 +8,7 @@ import { MomentsInspire } from '@/components/wanderly/home/MomentsInspire';
 
 export default function HomePage() {
   return (
-    <main className="flex flex-col w-full overflow-hidden">
+    <main className="flex flex-col w-full overflow-x-clip">
       {/* 1. HERO SECTION: "The World Beyond." */}
       <HomeHero />
 
@@ -22,7 +22,7 @@ export default function HomePage() {
       <WhyChooseUs />
 
       {/* 5. STORIES FROM THE ROAD: The Journal */}
-      <StoriesFromRoad />
+      {/* <StoriesFromRoad /> */}
 
       {/* 6. MOMENTS THAT INSPIRE: Gallery Mosaic & Lightbox */}
       <MomentsInspire />
