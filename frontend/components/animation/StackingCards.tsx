@@ -33,7 +33,6 @@ export function StackingCards({
           const inner = wrap.querySelector<HTMLElement>('[data-stack-inner]');
           gsap.to(inner, {
             scale: 0.94 - i * 0.01,
-            filter: 'brightness(0.82)',
             transformOrigin: 'center top',
             ease: 'none',
             scrollTrigger: {

@@ -210,7 +210,7 @@ const About = () => {
               {FEATURES.map((f, i) => (
                 <div
                   key={f.title}
-                  className={`rounded-3xl border shadow-lg p-8 md:p-12 min-h-[260px] md:min-h-[300px] flex flex-col md:flex-row md:items-center gap-6 md:gap-16 ${f.card}`}
+                  className={`rounded-3xl border shadow-xl p-8 md:p-12 min-h-[260px] md:min-h-[300px] flex flex-col md:flex-row md:items-center gap-6 md:gap-16 ${f.card}`}
                 >
                   <span className={`text-7xl md:text-[120px] leading-none font-bold ${f.num}`}>
                     0{i + 1}
