@@ -80,12 +80,12 @@ export default function MessagesPanel({
 
   const load = useCallback(async () => {
     try {
-      setError("");
       const data = await api(`?status=${filter}&type=${typeFilter}`);
+      setError("");
       setMessages(data.messages || []);
       onUnreadChange?.(data.unread || 0);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Error loading messages");
     } finally {
       setLoading(false);
     }
@@ -93,10 +93,32 @@ export default function MessagesPanel({
 
   // initial load + refresh every 30s so new messages appear
   useEffect(() => {
-    load();
+    let isMounted = true;
+    (async () => {
+      try {
+        const data = await api(`?status=${filter}&type=${typeFilter}`);
+        if (isMounted) {
+          setError("");
+          setMessages(data.messages || []);
+          onUnreadChange?.(data.unread || 0);
+        }
+      } catch (e: unknown) {
+        if (isMounted) {
+          setError(e instanceof Error ? e.message : "Error loading messages");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    })();
+
     const t = setInterval(load, 30000);
-    return () => clearInterval(t);
-  }, [load]);
+    return () => {
+      isMounted = false;
+      clearInterval(t);
+    };
+  }, [api, filter, typeFilter, onUnreadChange, load]);
 
   const visible = useMemo(() => {
     const q = query.toLowerCase();
@@ -124,8 +146,8 @@ export default function MessagesPanel({
       setActive(await api(`/${active._id}/reply`, { method: "POST", body: JSON.stringify({ body: reply }) }));
       setReply("");
       load();
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Error sending reply");
     } finally {
       setSending(false);
     }

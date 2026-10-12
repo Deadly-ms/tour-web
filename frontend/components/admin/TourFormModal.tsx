@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@clerk/nextjs';
 import { useToast } from '@/components/ui/Toast';
@@ -16,18 +16,13 @@ import {
   Plus,
   Trash2,
   Image as ImageIcon,
-  Check,
-  AlertCircle,
   Loader2,
   Sparkles,
-  MapPin,
   Calendar,
   Layers,
   FileText,
   DollarSign,
-  Eye,
   Hotel,
-  Star,
 } from 'lucide-react';
 
 interface TourFormModalProps {
@@ -46,12 +41,17 @@ const CATEGORIES = [
   'Adventure',
 ];
 
-export function TourFormModal({
-  isOpen,
+interface TourFormModalContentProps {
+  onClose: () => void;
+  onSuccess: () => void;
+  tourToEdit?: TourPackage | null;
+}
+
+function TourFormModalContent({
   onClose,
   onSuccess,
   tourToEdit,
-}: TourFormModalProps) {
+}: TourFormModalContentProps) {
   const { getToken } = useAuth();
   const { showToast } = useToast();
 
@@ -62,141 +62,83 @@ export function TourFormModal({
   const [uploadingStayIndex, setUploadingStayIndex] = useState<number | null>(null);
   const [uploadingHotelIndex, setUploadingHotelIndex] = useState<number | null>(null);
 
-  // Form State
-  const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
-  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
-  const [destination, setDestination] = useState('');
-  const [category, setCategory] = useState(CATEGORIES[0]);
-  const [duration, setDuration] = useState('5 Days / 4 Nights');
-  const [durationDays, setDurationDays] = useState<number>(5);
-  const [groupSize, setGroupSize] = useState('Private / Couple / Family');
-  const [price, setPrice] = useState<number>(19999);
-  const [originalPrice, setOriginalPrice] = useState<number | undefined>(24999);
-  const [discountPercent, setDiscountPercent] = useState<number | undefined>(20);
-  const [heroImage, setHeroImage] = useState('');
-  const [gallery, setGallery] = useState<string[]>([]);
+  // Form State initialized directly from tourToEdit without useEffect
+  const [title, setTitle] = useState(tourToEdit?.title || '');
+  const [slug, setSlug] = useState(tourToEdit?.slug || '');
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(Boolean(tourToEdit?.slug));
+  const [destination, setDestination] = useState(tourToEdit?.destination || '');
+  const [category, setCategory] = useState(tourToEdit?.category || CATEGORIES[0]);
+  const [duration, setDuration] = useState(tourToEdit?.duration || '5 Days / 4 Nights');
+  const [durationDays, setDurationDays] = useState<number>(tourToEdit?.durationDays || 5);
+  const [groupSize, setGroupSize] = useState(tourToEdit?.groupSize || 'Private / Couple / Family');
+  const [price, setPrice] = useState<number>(tourToEdit ? tourToEdit.price || 0 : 19999);
+  const [originalPrice, setOriginalPrice] = useState<number | undefined>(
+    tourToEdit ? tourToEdit.originalPrice : 23999
+  );
+  const [discountPercent, setDiscountPercent] = useState<number | undefined>(
+    tourToEdit ? tourToEdit.discountPercent : 16
+  );
+  const [heroImage, setHeroImage] = useState(
+    tourToEdit?.heroImage || 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1600&q=85'
+  );
+  const [gallery, setGallery] = useState<string[]>(tourToEdit?.gallery || []);
   const [newGalleryUrl, setNewGalleryUrl] = useState('');
-  const [hotels, setHotels] = useState<HotelItem[]>([]);
-  const [overview, setOverview] = useState('');
-  const [tags, setTags] = useState('');
-  const [tripType, setTripType] = useState('Private Tour');
-  const [bestTime, setBestTime] = useState('Oct - Mar');
-  const [startEnd, setStartEnd] = useState('');
-  const [isPublished, setIsPublished] = useState(true);
-  const [featured, setFeatured] = useState(false);
-  const [bestSeller, setBestSeller] = useState(false);
+  const [hotels, setHotels] = useState<HotelItem[]>(tourToEdit?.hotels || []);
+  const [overview, setOverview] = useState(tourToEdit?.overview || '');
+  const [tags, setTags] = useState(
+    tourToEdit?.tags ? tourToEdit.tags.join(', ') : 'Heritage, Luxury, Culture'
+  );
+  const [tripType, setTripType] = useState(tourToEdit?.tripType || 'Private Tour');
+  const [bestTime, setBestTime] = useState(tourToEdit?.bestTime || 'Oct - Mar');
+  const [startEnd, setStartEnd] = useState(tourToEdit?.startEnd || '');
+  const [isPublished, setIsPublished] = useState(
+    tourToEdit?.isPublished !== undefined ? tourToEdit.isPublished : true
+  );
+  const [featured, setFeatured] = useState(Boolean(tourToEdit?.featured));
+  const [bestSeller, setBestSeller] = useState(Boolean(tourToEdit?.bestSeller));
 
-  const [inclusions, setInclusions] = useState<string[]>([
-    'Curated 4-star boutique hotel stays',
-    'Daily complimentary breakfast and traditional dinner',
-    'Private chauffeur-driven AC vehicle for entire tour',
-    'All monument entry tickets and sightseeing permits',
-  ]);
+  const [inclusions, setInclusions] = useState<string[]>(
+    tourToEdit?.inclusions || [
+      'Curated 4-star boutique hotel stays',
+      'Daily complimentary breakfast and traditional dinner',
+      'Private chauffeur-driven AC vehicle for entire tour',
+      'All monument entry tickets and sightseeing permits',
+    ]
+  );
   const [newInclusion, setNewInclusion] = useState('');
 
-  const [exclusions, setExclusions] = useState<string[]>([
-    'Airfare / Train tickets to destination',
-    'Personal expenses, shopping, and laundry',
-    'Optional adventure activity fees',
-  ]);
+  const [exclusions, setExclusions] = useState<string[]>(
+    tourToEdit?.exclusions || [
+      'Airfare / Train tickets to destination',
+      'Personal expenses, shopping, and laundry',
+      'Optional adventure activity fees',
+    ]
+  );
   const [newExclusion, setNewExclusion] = useState('');
 
-  const [itinerary, setItinerary] = useState<ItineraryDay[]>([
-    {
-      day: 1,
-      title: 'Arrival & Welcome Dinner',
-      description: 'Chauffeur pickup from the airport/station. Check into hotel and enjoy an evening orientation and welcome dinner.',
-      meals: 'Welcome Dinner',
-      accommodation: 'Curated Heritage Stay',
-    },
-    {
-      day: 2,
-      title: 'Heritage Sightseeing & Local Cultural Walk',
-      description: 'Morning guided tour of the key historical landmarks followed by a stroll through the bustling artisan bazaars.',
-      meals: 'Breakfast & Dinner',
-      accommodation: 'Curated Heritage Stay',
-    },
-  ]);
+  const [itinerary, setItinerary] = useState<ItineraryDay[]>(
+    tourToEdit?.itinerary || [
+      {
+        day: 1,
+        title: 'Arrival & Welcome Dinner',
+        description:
+          'Chauffeur pickup from the airport/station. Check into hotel and enjoy an evening orientation and welcome dinner.',
+        meals: 'Welcome Dinner',
+        accommodation: 'Curated Heritage Stay',
+      },
+      {
+        day: 2,
+        title: 'Heritage Sightseeing & Local Cultural Walk',
+        description:
+          'Morning guided tour of the key historical landmarks followed by a stroll through the bustling artisan bazaars.',
+        meals: 'Breakfast & Dinner',
+        accommodation: 'Curated Heritage Stay',
+      },
+    ]
+  );
 
   const heroFileInputRef = useRef<HTMLInputElement>(null);
   const galleryFileInputRef = useRef<HTMLInputElement>(null);
-
-  // Initialize or reset form when modal opens or tourToEdit changes
-  useEffect(() => {
-    if (tourToEdit) {
-      setTitle(tourToEdit.title || '');
-      setSlug(tourToEdit.slug || '');
-      setIsSlugManuallyEdited(true);
-      setDestination(tourToEdit.destination || '');
-      setCategory(tourToEdit.category || CATEGORIES[0]);
-      setDuration(tourToEdit.duration || '5 Days / 4 Nights');
-      setDurationDays(tourToEdit.durationDays || 5);
-      setGroupSize(tourToEdit.groupSize || 'Private / Couple / Family');
-      setPrice(tourToEdit.price || 0);
-      setOriginalPrice(tourToEdit.originalPrice);
-      setDiscountPercent(tourToEdit.discountPercent);
-      setHeroImage(tourToEdit.heroImage || '');
-      setGallery(tourToEdit.gallery || []);
-      setOverview(tourToEdit.overview || '');
-      setTags(tourToEdit.tags ? tourToEdit.tags.join(', ') : '');
-      setTripType(tourToEdit.tripType || 'Private Tour');
-      setBestTime(tourToEdit.bestTime || 'Oct - Mar');
-      setStartEnd(tourToEdit.startEnd || '');
-      setIsPublished(tourToEdit.isPublished !== undefined ? tourToEdit.isPublished : true);
-      setFeatured(Boolean(tourToEdit.featured));
-      setBestSeller(Boolean(tourToEdit.bestSeller));
-      setInclusions(tourToEdit.inclusions || []);
-      setExclusions(tourToEdit.exclusions || []);
-      setItinerary(tourToEdit.itinerary || []);
-      setHotels(tourToEdit.hotels || []);
-    } else {
-      // Defaults for new tour
-      setTitle('');
-      setSlug('');
-      setIsSlugManuallyEdited(false);
-      setDestination('');
-      setCategory(CATEGORIES[0]);
-      setDuration('5 Days / 4 Nights');
-      setDurationDays(5);
-      setGroupSize('Private / Couple / Family');
-      setPrice(19999);
-      setOriginalPrice(23999);
-      setDiscountPercent(16);
-      setHeroImage('https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1600&q=85');
-      setGallery([]);
-      setHotels([]);
-      setOverview('');
-      setTags('Heritage, Luxury, Culture');
-      setTripType('Private Tour');
-      setBestTime('Oct - Mar');
-      setStartEnd('');
-      setIsPublished(true);
-      setFeatured(false);
-      setBestSeller(false);
-      setInclusions([
-        'Curated 4-star boutique hotel stays',
-        'Daily complimentary breakfast and traditional dinner',
-        'Private chauffeur-driven AC vehicle for entire tour',
-        'All monument entry tickets and sightseeing permits',
-      ]);
-      setExclusions([
-        'Airfare / Train tickets to destination',
-        'Personal expenses, shopping, and laundry',
-        'Optional adventure activity fees',
-      ]);
-      setItinerary([
-        {
-          day: 1,
-          title: 'Arrival & Welcome Dinner',
-          description: 'Chauffeur pickup from the airport/station. Check into hotel and enjoy an evening orientation and welcome dinner.',
-          meals: 'Welcome Dinner',
-          accommodation: 'Curated Boutique Stay',
-        },
-      ]);
-    }
-    setActiveTab('basic');
-  }, [tourToEdit, isOpen]);
 
   // Auto-generate slug when title changes (if not manually edited)
   const handleTitleChange = (val: string) => {
@@ -348,7 +290,7 @@ export function TourFormModal({
     ]);
   };
 
-  const handleUpdateHotel = (index: number, field: keyof HotelItem, value: any) => {
+  const handleUpdateHotel = (index: number, field: keyof HotelItem, value: string | number) => {
     setHotels((prev) =>
       prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
     );
@@ -531,8 +473,6 @@ export function TourFormModal({
       setSubmitting(false);
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/70 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
@@ -1495,5 +1435,23 @@ export function TourFormModal({
         </form>
       </div>
     </div>
+  );
+}
+
+export function TourFormModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  tourToEdit,
+}: TourFormModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <TourFormModalContent
+      key={tourToEdit?.id || tourToEdit?._id || 'new'}
+      onClose={onClose}
+      onSuccess={onSuccess}
+      tourToEdit={tourToEdit}
+    />
   );
 }

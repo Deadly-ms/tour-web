@@ -101,3 +101,16 @@ export interface ContactInquiry {
   destination?: string;
   message: string;
 }
+
+export interface GalleryItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  caption?: string;
+  imageUrl: string;
+  category?: string;
+  isPublished?: boolean;
+  displayOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}

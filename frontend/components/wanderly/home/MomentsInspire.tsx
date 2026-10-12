@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ArrowRight, Expand } from 'lucide-react';
 import { gsap, useGSAP, MOTION_OK } from '@/lib/gsap';
 import { GalleryLightboxModal } from '../modals/GalleryLightboxModal';
 import Link from 'next/link';
+import { SectionHeader } from '@/components/animation/SectionHeader';
+import { getPublicGallery } from '@/services/gallery.service';
 
 interface GalleryPhoto {
   url: string;
@@ -77,6 +79,7 @@ export function MomentsInspire({
   description = 'A glimpse into the beautiful places and unforgettable experiences.',
   photos = DEFAULT_PHOTOS,
 }: MomentsInspireProps) {
+  const [activePhotos, setActivePhotos] = useState<GalleryPhoto[]>(photos);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
@@ -84,34 +87,72 @@ export function MomentsInspire({
   const head = useRef<HTMLDivElement>(null);
   const grid = useRef<HTMLDivElement>(null);
 
+  // Fetch live photos from database so admin edits immediately show on homepage
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const res = await getPublicGallery();
+        if (res.success && res.data.length > 0 && isMounted) {
+          const mapped: GalleryPhoto[] = res.data.map((item) => ({
+            url: item.imageUrl,
+            title: item.title,
+            caption: item.caption || '',
+          }));
+          setActivePhotos(mapped);
+        }
+      } catch (err) {
+        console.error('Failed to load live gallery photos for homepage:', err);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
     setIsLightboxOpen(true);
   };
 
+  const photoList = activePhotos.length > 0 ? activePhotos : DEFAULT_PHOTOS;
+
+  // Header subtitle and button animation - decoupled from photoList state
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
-        // Heading fades up
         if (head.current) {
-          gsap.from(head.current.children, {
-            y: 40,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.12,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: head.current, start: 'top 85%', once: true },
-          });
+          gsap.fromTo(
+            '[data-fade]',
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.9,
+              stagger: 0.15,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: head.current, start: 'top 85%', once: true },
+              clearProps: 'all',
+            }
+          );
         }
+      });
+    },
+    { scope: head }
+  );
 
-        // Mosaic: rows slide in from opposite sides and tiles scale up while
-        // you scroll, so the scattered photos "lock" into one clean grid.
+  // Mosaic: rows slide in from opposite sides and tiles settle as you scroll
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        if (!grid.current) return;
         const rows = gsap.utils.toArray<HTMLElement>('[data-row]', grid.current);
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: grid.current,
-            start: 'top 92%',
+            start: 'top 95%',
             end: 'top 30%',
             scrub: 1,
           },
@@ -126,7 +167,7 @@ export function MomentsInspire({
         });
         tl.fromTo(
           '[data-tile]',
-          { scale: 0.82, opacity: 0.15 },
+          { scale: 0.88, opacity: 0.5 },
           {
             scale: 1,
             opacity: 1,
@@ -138,43 +179,50 @@ export function MomentsInspire({
         );
       });
     },
-    { scope: root }
+    { scope: grid, dependencies: [photoList] }
   );
 
   // Build the rows from the photos (cycles if there are fewer photos than tiles)
-  let cursor = 0;
-  const rowsData = ROWS.map((weights) =>
-    weights.map((w) => {
-      const photoIndex = cursor % photos.length;
-      cursor += 1;
-      return { weight: w, photoIndex, photo: photos[photoIndex] };
-    })
-  );
+  const rowsData = ROWS.map((weights, rowIndex) => {
+    const rowStartIndex = ROWS.slice(0, rowIndex).reduce((acc, row) => acc + row.length, 0);
+    return weights.map((w, colIndex) => {
+      const photoIndex = (rowStartIndex + colIndex) % photoList.length;
+      return { weight: w, photoIndex, photo: photoList[photoIndex] };
+    });
+  });
+
+  // Split title lines cleanly for SectionHeader
+  const headerLines = title.includes('\n')
+    ? title.split('\n')
+    : title.includes('That')
+    ? ['Moments That', 'Inspire.']
+    : [title];
 
   return (
     <section ref={root} className="relative overflow-x-clip py-20 sm:py-28 bg-white">
-      {/* Heading */}
-      <div ref={head} className="max-w-2xl mx-auto px-6 sm:px-8 text-center space-y-4 sm:space-y-5">
-        <div className="flex items-center justify-center gap-3">
-          <span className="h-px w-8 bg-gray-400" />
-          <span className="text-sm uppercase tracking-widest text-gray-500">
-            {tag}
-          </span>
-          <span className="h-px w-8 bg-gray-400" />
-        </div>
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-[1.08] whitespace-pre-line tracking-tight">
-          {title}
-        </h2>
-        <p className="text-sm text-gray-600 leading-relaxed max-w-md mx-auto">
+      {/* Heading matching About Page typography */}
+      <div ref={head} className="max-w-3xl mx-auto px-6 sm:px-8 text-center">
+        <SectionHeader
+          eyebrow={tag}
+          lines={headerLines}
+          align="center"
+          className="mb-4"
+        />
+
+        <p
+          data-fade
+          className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-lg mx-auto"
+        >
           {description}
         </p>
-        <div className="pt-2">
+
+        <div data-fade className="pt-6">
           <Link
-            href={'/gallery'}
-            className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-black text-white text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors duration-300 shadow-sm"
+            href="/gallery"
+            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-slate-900 text-white text-xs sm:text-sm font-semibold hover:bg-black hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md ring-1 ring-black/10"
           >
             <span>Explore Gallery</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
           </Link>
         </div>
       </div>
@@ -216,7 +264,7 @@ export function MomentsInspire({
       <GalleryLightboxModal
         isOpen={isLightboxOpen}
         onClose={() => setIsLightboxOpen(false)}
-        images={photos}
+        images={photoList}
         initialIndex={lightboxIndex}
       />
     </section>

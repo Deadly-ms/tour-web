@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { gsap, useGSAP, MOTION_OK } from '@/lib/gsap';
 
 interface SectionHeaderProps {
-  number: string;          // big faint number, e.g. "01"
+  number?: string;         // big faint number, e.g. "01" (optional)
   eyebrow: string;         // small uppercase label
   lines: string[];         // title, one entry per line
   align?: 'left' | 'right' | 'center';
@@ -54,20 +54,22 @@ export function SectionHeader({
           ease: 'power4.out',
           scrollTrigger: once,
         });
-        gsap.fromTo(
-          '[data-ghost]',
-          { yPercent: 35 },
-          {
-            yPercent: -35,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: root.current,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
-            },
-          }
-        );
+        if (number) {
+          gsap.fromTo(
+            '[data-ghost]',
+            { yPercent: 35 },
+            {
+              yPercent: -35,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: root.current,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+              },
+            }
+          );
+        }
       });
     },
     { scope: root }
@@ -75,14 +77,16 @@ export function SectionHeader({
 
   return (
     <div ref={root} className={`relative ${TEXT_ALIGN[align]} ${className}`}>
-      <div className={`pointer-events-none absolute -top-10 md:-top-24 z-0 ${GHOST_POS[align]}`}>
-        <span
-          data-ghost
-          className="block text-[88px] md:text-[140px] leading-none font-bold text-gray-100 select-none"
-        >
-          {number}
-        </span>
-      </div>
+      {number && (
+        <div className={`pointer-events-none absolute -top-10 md:-top-24 z-0 ${GHOST_POS[align]}`}>
+          <span
+            data-ghost
+            className="block text-[88px] md:text-[140px] leading-none font-bold text-gray-100 select-none"
+          >
+            {number}
+          </span>
+        </div>
+      )}
 
       <p data-eyebrow className="relative z-10 text-sm uppercase tracking-widest text-gray-500 mb-4">
         {eyebrow}

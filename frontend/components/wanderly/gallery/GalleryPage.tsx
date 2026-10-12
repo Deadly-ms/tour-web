@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -8,6 +8,7 @@ import { gsap, useGSAP, MOTION_OK } from '@/lib/gsap';
 import { SectionHeader } from '@/components/animation/SectionHeader';
 import { ScrollProgress } from '@/components/animation/ScrollProgress';
 import { GalleryLightboxModal } from '@/components/wanderly/modals/GalleryLightboxModal';
+import { getPublicGallery } from '@/services/gallery.service';
 
 interface GalleryPhoto {
   url: string;
@@ -52,8 +53,32 @@ const isWide = (i: number) => i % 7 === 0 || i % 7 === 6;
 
 export function GalleryPage() {
   const root = useRef<HTMLElement>(null);
+  const [photos, setPhotos] = useState<GalleryPhoto[]>(PHOTOS);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // Fetch live photos from backend API
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const res = await getPublicGallery();
+        if (res.success && res.data.length > 0 && isMounted) {
+          const mapped: GalleryPhoto[] = res.data.map((item) => ({
+            url: item.imageUrl,
+            title: item.title,
+            caption: item.caption || '',
+          }));
+          setPhotos(mapped);
+        }
+      } catch (err) {
+        console.error('Failed to load gallery photos:', err);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const openLightbox = (i: number) => {
     setLightboxIndex(i);
@@ -91,7 +116,7 @@ export function GalleryPage() {
         });
       });
     },
-    { scope: root }
+    { scope: root, dependencies: [photos] }
   );
 
   return (
@@ -119,7 +144,7 @@ export function GalleryPage() {
 
           {/* ================= BENTO GRID ================= */}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5 auto-rows-[200px] sm:auto-rows-[250px] lg:auto-rows-[290px]">
-            {PHOTOS.map((photo, i) => (
+            {photos.map((photo, i) => (
               <button
                 key={photo.url}
                 type="button"
@@ -194,7 +219,7 @@ export function GalleryPage() {
         <GalleryLightboxModal
           isOpen={lightboxOpen}
           onClose={() => setLightboxOpen(false)}
-          images={PHOTOS}
+          images={photos}
           initialIndex={lightboxIndex}
         />
       </main>

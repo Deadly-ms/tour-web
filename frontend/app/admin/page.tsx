@@ -15,6 +15,7 @@ import {
   adminDeleteTour,
 } from "@/services/tour.service";
 import MessagesPanel from "@/components/admin/MessagesPanel";
+import GalleryPanel from "@/components/admin/GalleryPanel";
 import { TourFormModal } from "@/components/admin/TourFormModal";
 import {
   Shield,
@@ -22,7 +23,6 @@ import {
   Plus,
   Compass,
   Clock,
-  Calendar,
   BarChart3,
   Search,
   Eye,
@@ -33,7 +33,7 @@ import {
   CheckCircle2,
   XCircle,
   RefreshCw,
-  ExternalLink,
+  Image as ImageIcon,
 } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
@@ -42,11 +42,12 @@ export default function AdminPage() {
   const { getToken } = useAuth();
   const { showToast } = useToast();
 
-  const [tab, setTab] = useState<"packages" | "messages">("packages");
+  const [tab, setTab] = useState<"packages" | "messages" | "gallery">("packages");
   const [packages, setPackages] = useState<TourPackage[]>([]);
   const [loadingPackages, setLoadingPackages] = useState(true);
   const [packageSearch, setPackageSearch] = useState("");
   const [unread, setUnread] = useState(0);
+  const [galleryCount, setGalleryCount] = useState(0);
 
   // Modal State
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -59,28 +60,41 @@ export default function AdminPage() {
   // Toggle publish loading ID
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
-  // Fetch Tours from API
-  const fetchTours = useCallback(async () => {
-    try {
-      setLoadingPackages(true);
-      const token = await getToken();
-      const res = await adminListTours(token);
-      if (res.success) {
-        setPackages(res.data);
-      } else {
-        showToast(res.error || "Failed to fetch tour packages", "error");
-      }
-    } catch (err) {
-      console.error("Error loading tours:", err);
-      showToast("Could not load tour packages", "error");
-    } finally {
-      setLoadingPackages(false);
-    }
-  }, [getToken, showToast]);
+  // Tours data synchronization
+  const [toursRefreshKey, setToursRefreshKey] = useState(0);
+  const reloadTours = useCallback(() => {
+    setLoadingPackages(true);
+    setToursRefreshKey((k) => k + 1);
+  }, []);
 
   useEffect(() => {
-    fetchTours();
-  }, [fetchTours]);
+    let isMounted = true;
+    (async () => {
+      try {
+        const token = await getToken();
+        const res = await adminListTours(token);
+        if (isMounted) {
+          if (res.success) {
+            setPackages(res.data);
+          } else {
+            showToast(res.error || "Failed to fetch tour packages", "error");
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error("Error loading tours:", err);
+          showToast("Could not load tour packages", "error");
+        }
+      } finally {
+        if (isMounted) {
+          setLoadingPackages(false);
+        }
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [getToken, showToast, toursRefreshKey]);
 
   // Load initial unread message count from backend
   useEffect(() => {
@@ -106,6 +120,25 @@ export default function AdminPage() {
       isMounted = false;
     };
   }, [getToken]);
+
+  // Load initial gallery count
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const res = await fetch(`${API}/gallery`);
+        if (res.ok && isMounted) {
+          const data = await res.json();
+          setGalleryCount(data.count || (data.data && data.data.length) || 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch gallery count:", err);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Handle Toggle Publish
   const handleTogglePublish = async (pkg: TourPackage) => {
@@ -268,19 +301,22 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Calendar className="w-5 h-5" />
+          <div
+            onClick={() => setTab("gallery")}
+            className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-2 cursor-pointer hover:border-black transition"
+          >
+            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+              <ImageIcon className="w-5 h-5" />
             </div>
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-              Confirmed Departures
+              Gallery Moments
             </span>
             <div className="flex items-baseline justify-between">
               <span className="text-3xl font-black text-slate-900 font-serif">
-                128
+                {galleryCount}
               </span>
-              <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
-                This Month
+              <span className="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">
+                Live & Drafts
               </span>
             </div>
           </div>
@@ -333,6 +369,20 @@ export default function AdminPage() {
                   </span>
                 )}
               </button>
+              <button
+                onClick={() => setTab("gallery")}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                  tab === "gallery"
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+                }`}
+              >
+                <ImageIcon className="w-3.5 h-3.5" />
+                <span>Gallery Management</span>
+                <span className="ml-1 bg-slate-100 text-slate-700 text-[11px] font-bold px-1.5 py-0.2 rounded-full border border-slate-200">
+                  {galleryCount}
+                </span>
+              </button>
             </div>
 
             {tab === "packages" && (
@@ -349,7 +399,7 @@ export default function AdminPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={fetchTours}
+                  onClick={reloadTours}
                   disabled={loadingPackages}
                   title="Refresh Packages"
                   className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
@@ -544,6 +594,13 @@ export default function AdminPage() {
               <MessagesPanel onUnreadChange={setUnread} />
             </div>
           )}
+
+          {/* Tab 3: Gallery Management */}
+          {tab === "gallery" && (
+            <div className="mt-6">
+              <GalleryPanel onCountChange={setGalleryCount} />
+            </div>
+          )}
         </div>
       </Container>
 
@@ -554,7 +611,7 @@ export default function AdminPage() {
           setIsFormModalOpen(false);
           setTourToEdit(null);
         }}
-        onSuccess={fetchTours}
+        onSuccess={reloadTours}
         tourToEdit={tourToEdit}
       />
 
