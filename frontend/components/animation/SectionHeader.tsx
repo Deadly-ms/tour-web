@@ -7,6 +7,7 @@ interface SectionHeaderProps {
   lines: string[];         // title, one entry per line
   align?: 'left' | 'right' | 'center';
   className?: string;
+  as?: 'h1' | 'h2' | 'h3';
 }
 
 const TEXT_ALIGN = { left: 'text-left', right: 'text-right', center: 'text-center' } as const;
@@ -27,8 +28,10 @@ export function SectionHeader({
   lines,
   align = 'left',
   className = '',
+  as = 'h2',
 }: SectionHeaderProps) {
   const root = useRef<HTMLDivElement>(null);
+  const HeadingTag = as;
 
   useGSAP(
     () => {
@@ -84,7 +87,7 @@ export function SectionHeader({
       <p data-eyebrow className="relative z-10 text-sm uppercase tracking-widest text-gray-500 mb-4">
         {eyebrow}
       </p>
-      <h2 className="relative z-10 text-4xl md:text-5xl font-bold leading-tight text-gray-900">
+      <HeadingTag className="relative z-10 text-4xl md:text-5xl font-bold leading-tight text-gray-900">
         {lines.map((line, i) => (
           <span key={i} className="block overflow-hidden pb-[0.1em]">
             <span data-line className="block">
@@ -92,7 +95,7 @@ export function SectionHeader({
             </span>
           </span>
         ))}
-      </h2>
+      </HeadingTag>
     </div>
   );
 }

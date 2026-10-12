@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ArrowRight, Expand } from 'lucide-react';
 import { gsap, useGSAP, MOTION_OK } from '@/lib/gsap';
 import { GalleryLightboxModal } from '../modals/GalleryLightboxModal';
+import Link from 'next/link';
 
 interface GalleryPhoto {
   url: string;
@@ -168,13 +169,13 @@ export function MomentsInspire({
           {description}
         </p>
         <div className="pt-2">
-          <button
-            onClick={() => openLightbox(0)}
+          <Link
+            href={'/gallery'}
             className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-black text-white text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors duration-300 shadow-sm"
           >
             <span>Explore Gallery</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
       </div>
 
