@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Search, Menu, X, ArrowRight } from 'lucide-react';
 import { PlanTripModal } from '../modals/PlanTripModal';
@@ -62,24 +63,15 @@ export function WanderlyNavbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <svg
-                viewBox="0 0 28 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className={`w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-105 ${
-                  isTransparent ? 'text-white' : 'text-black'
-                }`}
-              >
-                <path
-                  d="M3 21L10 7L15 15L18 10L25 21H3Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle cx="14" cy="4" r="1.5" fill="currentColor" />
-              </svg>
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <Image
+                src="/logo.png"
+                alt="Track your trip logo"
+                width={36}
+                height={72}
+                priority
+                className="h-8 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              />
               <span
                 className={`text-xl sm:text-2xl font-bold tracking-tight ${
                   isTransparent ? 'text-white' : 'text-black'

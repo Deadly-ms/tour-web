@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
 
@@ -25,22 +26,14 @@ export function WanderlyFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-gray-200">
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="flex items-center gap-2 group inline-block">
-              <svg
-                viewBox="0 0 28 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-8 h-8 text-black group-hover:scale-105 transition-transform"
-              >
-                <path
-                  d="M3 21L10 7L15 15L18 10L25 21H3Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle cx="14" cy="4" r="1.5" fill="currentColor" />
-              </svg>
+            <Link href="/" className="flex items-center gap-2.5 group inline-block">
+              <Image
+                src="/logo.png"
+                alt="Track your trip logo"
+                width={36}
+                height={72}
+                className="h-9 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+              />
               <span className="text-2xl font-bold tracking-tight text-black">
                 Track your trip
               </span>
