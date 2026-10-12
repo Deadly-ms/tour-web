@@ -9,29 +9,29 @@ const GAP = 48;
 
 const testimonials = [
   {
-    text: "Absolutely stunning décor! Every detail was perfect and our wedding looked magical. Highly professional team.",
+    text: "Our Kerala trip was beautifully planned. Every stay, transfer and activity was perfectly arranged, and the team was always one call away.",
     name: "Priya & Arjun",
-    role: "Wedding Clients",
+    role: "Honeymoon Travellers",
   },
   {
-    text: "PlantFashion transformed our corporate event into a luxury experience. Impressive execution and creativity.",
+    text: "Track Your Trip turned our family holiday into a stress-free experience. The itinerary suited everyone, from the kids to the grandparents.",
     name: "Rohit Sharma",
-    role: "Corporate Client",
+    role: "Family Trip",
   },
   {
-    text: "Professional, punctual, and incredibly stylish. The stage décor exceeded our expectations.",
+    text: "Professional, punctual, and genuinely caring. Our local guide made the journey far more special than we expected.",
     name: "Meenakshi Raj",
-    role: "Engagement Event",
+    role: "Heritage Tour",
   },
   {
-    text: "Beautiful execution and premium décor. Everything was perfectly organized.",
+    text: "Great hotels, comfortable transport, and not a single surprise. Everything was exactly as promised.",
     name: "Suresh Kumar",
-    role: "Birthday Event",
+    role: "Group Tour",
   },
   {
-    text: "Elegant designs and flawless execution. Guests were truly impressed.",
+    text: "A perfectly paced itinerary with time to enjoy each place. We will definitely book our next trip with them.",
     name: "Ananya Patel",
-    role: "Reception Event",
+    role: "Adventure Trip",
   },
 ];
 
@@ -82,8 +82,8 @@ export default function TestimonialSlider() {
       <div className="max-w-7xl mx-auto px-6 md:px-20 mb-16 md:mb-24">
         <SectionHeader
           number="04"
-          eyebrow="Client Words"
-          lines={["What Our Clients Say"]}
+          eyebrow="Traveller Stories"
+          lines={["What Our Travellers Say"]}
           align="center"
         />
       </div>

@@ -1,10 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import AboutTrustStats from "@/components/AboutTrustStats";
 import TestimonialSlider from "@/components/TestimonialSlider";
-import Footer from "@/components/Footer";
 import aboutImg from "@/assets/img2.jpg";
 
 import { gsap, useGSAP, MOTION_OK } from "@/lib/gsap";
@@ -17,39 +16,39 @@ import { ScrollProgress } from "@/components/animation/ScrollProgress";
 const PURPOSE = [
   {
     label: "Our Vision",
-    text: "To become a leading luxury event decoration brand known for innovative designs, premium quality, and memorable customer experiences across all celebrations.",
+    text: "To become a trusted name in travel, known for thoughtfully designed journeys, honest service, and unforgettable experiences for every kind of traveller.",
   },
   {
     label: "Our Mission",
-    text: "To transform every event into an emotional and visual masterpiece through creativity, precision, and professional execution.",
+    text: "To make every trip effortless and meaningful by combining local expertise, careful planning, and responsive support from the first enquiry to the journey home.",
   },
 ];
 
 const FEATURES = [
   {
-    title: "Premium Quality Materials",
-    text: "We use hand-picked flowers, luxury fabrics, premium lighting, and high-end décor elements.",
+    title: "Personalized Itineraries",
+    text: "Every trip is shaped around your interests, pace, and budget — never a copy-paste plan.",
     card: "bg-gray-50 border-gray-200 text-black",
     num: "text-gray-300",
     body: "text-gray-600",
   },
   {
-    title: "Customized Design Concepts",
-    text: "Every setup is uniquely tailored to your theme, space, and personal style.",
+    title: "Local Expertise",
+    text: "Real people with first-hand knowledge of the places, stories, and hidden corners worth your time.",
     card: "bg-gray-100 border-gray-200 text-black",
     num: "text-gray-300",
     body: "text-gray-600",
   },
   {
-    title: "Experienced Creative Team",
-    text: "Our decorators, designers, and technicians bring years of hands-on professional expertise.",
+    title: "Handpicked Stays & Transport",
+    text: "Comfortable hotels and trusted drivers we have checked, so you travel safely and sleep well.",
     card: "bg-gray-200 border-gray-300 text-black",
     num: "text-gray-400",
     body: "text-gray-700",
   },
   {
-    title: "End-to-End Event Execution",
-    text: "We handle everything from concept planning to final execution without stress for you.",
+    title: "24/7 On-Trip Support",
+    text: "We stay reachable before, during, and after your journey, whenever you need us.",
     card: "bg-black border-black text-white",
     num: "text-white/20",
     body: "text-gray-300",
@@ -120,7 +119,7 @@ const About = () => {
                   <img
                     data-hero-img
                     src={imgSrc}
-                    alt="About PlantFashion"
+                    alt="Travellers exploring with Track Your Trip"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -136,29 +135,31 @@ const About = () => {
               <SectionHeader
                 number="01"
                 eyebrow="Who We Are"
-                lines={["Great Events", "Start Together"]}
+                lines={["Great Journeys", "Start Together"]}
                 className="mb-6"
               />
 
               <RevealGroup y={30} stagger={0.15}>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  PlantFashion is a premium event decoration brand specializing in
-                  luxury floral styling, wedding décor, corporate setups, and custom
-                  event transformations. We blend creativity, craftsmanship, and
-                  precision to deliver unforgettable visual experiences.
+                  Track Your Trip is a travel and tour company specializing in
+                  curated tour packages, custom itineraries, handpicked stays, and
+                  seamless transport across India&apos;s most memorable destinations.
+                  We blend local knowledge, thoughtful planning, and genuine care
+                  to deliver journeys you will remember for years.
                 </p>
 
                 <p className="text-gray-600 leading-relaxed mb-8">
-                  From intimate celebrations to grand-scale productions, our
-                  dedication to quality and detail makes every moment extraordinary.
+                  From quiet weekend escapes to week-long family adventures, our
+                  focus on comfort, safety, and detail means you can simply enjoy
+                  the trip.
                 </p>
 
                 <div>
                   <Link
-                    to="/Contact"
+                    href="/contact"
                     className="inline-block px-8 py-3 border border-black text-black font-medium hover:bg-black hover:text-white transition"
                   >
-                    Contact Us
+                    Plan Your Trip
                   </Link>
                 </div>
               </RevealGroup>
@@ -201,7 +202,7 @@ const About = () => {
             <SectionHeader
               number="03"
               eyebrow="Our Strength"
-              lines={["Why Choose", "PlantFashion"]}
+              lines={["Why Choose", "Track Your Trip"]}
               className="mb-16 md:mb-20"
             />
 
@@ -230,8 +231,6 @@ const About = () => {
         {/* ================= 05 · STATS ================= */}
         <AboutTrustStats />
       </main>
-
-      {/* <Footer /> */}
     </>
   );
 };

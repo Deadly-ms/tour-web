@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { PartyPopper, Clock, Users, Star } from "lucide-react";
+import { Plane, Clock, Users, MapPin } from "lucide-react";
 import { gsap, useGSAP, MOTION_OK } from "@/lib/gsap";
 import { SectionHeader } from "@/components/animation/SectionHeader";
 
@@ -14,10 +14,10 @@ type Stat = {
 
 const stats: Stat[] = [
   {
-    label: "EVENTS COMPLETED",
+    label: "TRIPS PLANNED",
     value: 500,
     suffix: "+",
-    icon: <PartyPopper className="w-8 h-8 text-gray-500" />,
+    icon: <Plane className="w-8 h-8 text-gray-500" />,
   },
   {
     label: "YEARS EXPERIENCE",
@@ -26,16 +26,16 @@ const stats: Stat[] = [
     icon: <Clock className="w-8 h-8 text-gray-500" />,
   },
   {
-    label: "HAPPY CLIENTS",
+    label: "HAPPY TRAVELLERS",
     value: 300,
     suffix: "+",
     icon: <Users className="w-8 h-8 text-gray-500" />,
   },
   {
-    label: "CLIENT SATISFACTION",
-    value: 100,
-    suffix: "%",
-    icon: <Star className="w-8 h-8 text-gray-500" />,
+    label: "DESTINATIONS COVERED",
+    value: 25,
+    suffix: "+",
+    icon: <MapPin className="w-8 h-8 text-gray-500" />,
   },
 ];
 
@@ -101,8 +101,8 @@ const TrustStats = () => {
       <div className="relative max-w-7xl mx-auto px-6">
         <SectionHeader
           number="05"
-          eyebrow="Trusted Excellence"
-          lines={["Proven Event", "Decoration Expertise"]}
+          eyebrow="Trusted by Travellers"
+          lines={["Trusted Expertise", "in Tours & Travel"]}
         />
 
         {/* Stats Grid */}
