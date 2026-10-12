@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Search, MapPin, Calendar, Compass } from 'lucide-react';
+import { gsap, useGSAP, MOTION_OK } from '@/lib/gsap';
 
 interface PackagesFilterBarProps {
   destination: string;
@@ -24,19 +25,42 @@ export function PackagesFilterBar({
   availableDestinations,
   onSearch,
 }: PackagesFilterBarProps) {
+  const root = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        // The bar rises over the hero once the hero text has settled,
+        // then its fields appear one by one
+        const tl = gsap.timeline({ delay: 1.1, defaults: { ease: 'power3.out' } });
+        tl.from('[data-bar]', { y: 60, opacity: 0, duration: 1 }, 0).from(
+          '[data-field]',
+          { y: 14, opacity: 0, duration: 0.7, stagger: 0.09 },
+          0.35
+        );
+      });
+    },
+    { scope: root }
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSearch) onSearch();
   };
 
   return (
-    <div className="relative -mt-10 sm:-mt-12 z-30 max-w-5xl mx-auto px-4 sm:px-8">
+    <div ref={root} className="relative -mt-10 sm:-mt-12 z-30 max-w-5xl mx-auto px-4 sm:px-8">
       <form
+        data-bar
         onSubmit={handleSubmit}
         className="bg-white border border-gray-200 rounded-2xl sm:rounded-full p-3 sm:p-2.5 shadow-xl flex flex-col sm:flex-row items-center gap-3 sm:gap-2"
       >
         {/* Destination */}
-        <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+        <div
+          data-field
+          className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-gray-200"
+        >
           <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
           <div className="flex-1">
             <label className="block text-[10px] uppercase font-bold tracking-wider text-gray-400">
@@ -69,7 +93,10 @@ export function PackagesFilterBar({
         </div>
 
         {/* Duration */}
-        <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-gray-200">
+        <div
+          data-field
+          className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3 border-b sm:border-b-0 sm:border-r border-gray-200"
+        >
           <Calendar className="w-4 h-4 text-gray-400 shrink-0" />
           <div className="flex-1">
             <label className="block text-[10px] uppercase font-bold tracking-wider text-gray-400">
@@ -89,7 +116,7 @@ export function PackagesFilterBar({
         </div>
 
         {/* Travel Style */}
-        <div className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3">
+        <div data-field className="w-full sm:flex-1 px-4 py-1.5 flex items-center gap-3">
           <Compass className="w-4 h-4 text-gray-400 shrink-0" />
           <div className="flex-1">
             <label className="block text-[10px] uppercase font-bold tracking-wider text-gray-400">
@@ -111,6 +138,7 @@ export function PackagesFilterBar({
 
         {/* Search Button */}
         <button
+          data-field
           type="submit"
           className="w-full sm:w-auto px-7 py-3 rounded-full bg-black text-white text-xs font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shrink-0 shadow-sm"
         >
