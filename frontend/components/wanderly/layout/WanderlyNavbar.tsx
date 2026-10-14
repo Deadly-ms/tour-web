@@ -63,14 +63,14 @@ export function WanderlyNavbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group">
+            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
               <Image
-                src="/logo.png"
+                src="/brand-logo.png"
                 alt="Track your trip logo"
-                width={36}
-                height={72}
+                width={48}
+                height={46}
                 priority
-                className="h-8 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-10 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 drop-shadow-sm"
               />
               <span
                 className={`text-xl sm:text-2xl font-bold tracking-tight ${

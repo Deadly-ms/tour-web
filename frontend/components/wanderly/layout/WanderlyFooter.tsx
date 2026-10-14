@@ -26,13 +26,13 @@ export function WanderlyFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-gray-200">
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="flex items-center gap-2.5 group inline-block">
+            <Link href="/" className="flex items-center gap-3 group inline-block">
               <Image
-                src="/logo.png"
+                src="/brand-logo.png"
                 alt="Track your trip logo"
-                width={36}
-                height={72}
-                className="h-9 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+                width={52}
+                height={50}
+                className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-sm"
               />
               <span className="text-2xl font-bold tracking-tight text-black">
                 Track your trip
