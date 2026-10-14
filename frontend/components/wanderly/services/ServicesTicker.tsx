@@ -12,7 +12,10 @@ interface ServicesTickerProps {
  * leans the letters, and scrolling back reverses it.
  */
 export function ServicesTicker({
-  words = ['Private Tours', 'Custom Itineraries', 'Hotel & Stays', 'Transportation', 'Local Experiences'],
+  words = [
+    'College Tours', 'Corporate Tours', 'School Tours', 'Group Tours',
+    'Family Tours', 'Domestic Tours', 'Inbound Tours', 'Outbound Tours',
+  ],
 }: ServicesTickerProps) {
   const root = useRef<HTMLDivElement>(null);
 
@@ -26,7 +29,7 @@ export function ServicesTicker({
         const slide = gsap.fromTo(
           track,
           { xPercent: 0 },
-          { xPercent: -50, ease: 'none', duration: 40, repeat: -1 }
+          { xPercent: -50, ease: 'none', duration: 60, repeat: -1 }
         );
 
         const settle = gsap.delayedCall(0.12, () => {

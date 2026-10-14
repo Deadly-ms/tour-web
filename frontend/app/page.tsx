@@ -15,7 +15,7 @@ export default function HomePage() {
       {/* 2. POPULAR DESTINATIONS: Asymmetric 5-card grid */}
       <PopularDestinations />
 
-      {/* 3. CURATED TOUR PACKAGES: 3 curated cards */}
+      {/* 3. CURATED TOUR PACKAGES: 4 curated cards */}
       <CuratedPackages />
 
       {/* 4. WHY CHOOSE US: "Your Journey, Our Priority." */}

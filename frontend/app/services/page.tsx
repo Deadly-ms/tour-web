@@ -6,9 +6,9 @@ import { ServicesCTA } from '@/components/wanderly/services/ServicesCTA';
 import { ServicesTicker } from '@/components/wanderly/services/ServicesTicker';
 
 export const metadata: Metadata = {
-  title: 'Services | Track your trip — Everything You Need. Nothing You Don’t.',
+  title: 'Services | Track your trip — College, Corporate, School, Family & More',
   description:
-    'From bespoke itinerary planning to private chauffeured tours, boutique hotel curation, and authentic cultural immersion, discover Track your trip services.',
+    'Tour packages for colleges, corporates, schools, groups and families, plus domestic, inbound and outbound holidays, planned end to end by Track your trip.',
 };
 
 export default function ServicesPage() {

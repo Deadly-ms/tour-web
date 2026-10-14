@@ -415,6 +415,52 @@ export const togglePublishTour = async (
 };
 
 /**
+ * Admin: Toggle or set featured (curated on home) status
+ * PATCH /api/admin/tours/:id/featured
+ */
+export const toggleFeaturedTour = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    let tour = null;
+
+    if (mongoose.isValidObjectId(id)) {
+      tour = await Tour.findById(id);
+    } else {
+      tour = await Tour.findOne({ slug: id });
+    }
+
+    if (!tour) {
+      res.status(404).json({
+        success: false,
+        message: 'Tour package not found',
+      });
+      return;
+    }
+
+    if (req.body.featured !== undefined) {
+      tour.featured = Boolean(req.body.featured);
+    } else {
+      tour.featured = !tour.featured;
+    }
+
+    await tour.save();
+
+    res.json({
+      success: true,
+      message: `Tour package is now ${tour.featured ? 'featured in Curated Packages on Home' : 'removed from Curated Packages'}`,
+      featured: tour.featured,
+      data: tour,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Admin: Force re-seed or initial seed default tours
  * POST /api/admin/tours/seed
  */

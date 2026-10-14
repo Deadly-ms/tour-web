@@ -4,11 +4,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-  Compass,
-  Map,
-  Hotel,
-  Car,
-  Sparkles,
+  GraduationCap,
+  Briefcase,
+  School,
+  Users,
+  Heart,
+  MapPin,
+  PlaneLanding,
+  PlaneTakeoff,
   ArrowUpRight,
 } from 'lucide-react';
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap';
@@ -28,59 +31,92 @@ export interface ServiceItem {
 
 const DEFAULT_SERVICES: ServiceItem[] = [
   {
-    id: 'private-tours',
+    id: 'college-tour',
     number: '01',
-    title: 'Private Tours',
-    description: 'Tailored experiences for you and your group.',
-    icon: Compass,
-    showcaseImage: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=80',
-    showcaseTitle: 'Private Tours',
-    showcaseDescription: 'Bespoke chauffeurs, private guides, and exclusive access.',
-    href: '/tour-packages',
-  },
-  {
-    id: 'custom-itineraries',
-    number: '02',
-    title: 'Custom Itineraries',
-    description: 'Designed around your interests and pace.',
-    icon: Map,
-    showcaseImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-    showcaseTitle: 'Custom Itineraries',
-    showcaseDescription: 'Crafted to your rhythm, whether slow exploration or grand circuit.',
-    href: '/contact',
-  },
-  {
-    id: 'hotel-stays',
-    number: '03',
-    title: 'Hotel & Stays',
-    description: 'Handpicked stays in stunning locations.',
-    icon: Hotel,
-    showcaseImage: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
-    showcaseTitle: 'Luxury Stays',
-    showcaseDescription: 'Relax in the most beautiful places on earth.',
-    href: '/tour-packages',
-  },
-  {
-    id: 'transportation',
-    number: '04',
-    title: 'Transportation',
-    description: 'Comfortable and safe travel options.',
-    icon: Car,
+    title: 'College Tours',
+    description: 'Energetic trips for student groups.',
+    icon: GraduationCap,
     showcaseImage: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80',
-    showcaseTitle: 'Seamless Conveyance',
-    showcaseDescription: 'Sanitized premium fleet with seasoned chauffeurs.',
+    showcaseTitle: 'College Tour Package',
+    showcaseDescription: 'Well-paced trips for student groups, with safe stays, easy planning and plenty of adventure.',
     href: '/contact',
   },
   {
-    id: 'local-experiences',
-    number: '05',
-    title: 'Local Experiences',
-    description: 'Authentic encounters with local culture.',
-    icon: Sparkles,
+    id: 'corporate-tour',
+    number: '02',
+    title: 'Corporate Tours',
+    description: 'Offsites and team getaways.',
+    icon: Briefcase,
+    showcaseImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+    showcaseTitle: 'Corporate Tour Package',
+    showcaseDescription: 'Team offsites, incentive trips and getaways planned around your schedule and goals.',
+    href: '/contact',
+  },
+  {
+    id: 'school-tour',
+    number: '03',
+    title: 'School Tours',
+    description: 'Supervised educational journeys.',
+    icon: School,
     showcaseImage: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80',
-    showcaseTitle: 'Cultural Immersion',
-    showcaseDescription: 'Cooking with local chefs, tea plantation walks, and village artisans.',
+    showcaseTitle: 'School Tour Package',
+    showcaseDescription: 'Safe, well-supervised educational tours with age-appropriate itineraries and learning built in.',
+    href: '/contact',
+  },
+  {
+    id: 'group-tour',
+    number: '04',
+    title: 'Group Tours',
+    description: 'One plan for the whole group.',
+    icon: Users,
+    showcaseImage: 'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&w=1200&q=80',
+    showcaseTitle: 'Group Tour Package',
+    showcaseDescription: 'Shared journeys for friends, clubs and communities, with one itinerary and one point of contact.',
     href: '/tour-packages',
+  },
+  {
+    id: 'family-tour',
+    number: '05',
+    title: 'Family Tours',
+    description: 'Relaxed holidays for every age.',
+    icon: Heart,
+    showcaseImage: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=80',
+    showcaseTitle: 'Family Tour Package',
+    showcaseDescription: 'Comfortable, unhurried itineraries that work for grandparents, parents and children alike.',
+    href: '/tour-packages',
+  },
+  {
+    id: 'domestic-tour',
+    number: '06',
+    title: 'Domestic Tours',
+    description: 'Discover destinations across India.',
+    icon: MapPin,
+    showcaseImage: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=80',
+    showcaseTitle: 'Domestic Tour Package',
+    showcaseDescription: 'Mountains, coasts, deserts and heritage cities across India, planned end to end.',
+    href: '/tour-packages',
+  },
+  {
+    id: 'inbound-tour',
+    number: '07',
+    title: 'Inbound Tours',
+    description: 'India for international travellers.',
+    icon: PlaneLanding,
+    showcaseImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+    showcaseTitle: 'Inbound Tour Package',
+    showcaseDescription: 'Curated journeys through India for travellers visiting from abroad, with local guides and support.',
+    href: '/contact',
+  },
+  {
+    id: 'outbound-tour',
+    number: '08',
+    title: 'Outbound Tours',
+    description: 'Holidays abroad, fully arranged.',
+    icon: PlaneTakeoff,
+    showcaseImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+    showcaseTitle: 'Outbound Tour Package',
+    showcaseDescription: 'International holidays with visa guidance, flight tickets and on-ground support included.',
+    href: '/contact',
   },
 ];
 
@@ -92,6 +128,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowcaseProps) {
   const n = services.length;
+  // With many services the name list gets smaller so everything fits the pinned screen
+  const compact = n > 6;
   const root = useRef<HTMLElement>(null);
   const stRef = useRef<ScrollTrigger | null>(null);
   const [reduce, setReduce] = useState(false);
@@ -208,11 +246,15 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                     What we do
                   </span>
                 </div>
-                <p className="text-2xl xl:text-3xl font-bold text-gray-900 tracking-tight leading-snug mb-8">
+                <p
+                  className={`text-2xl xl:text-3xl font-bold text-gray-900 tracking-tight leading-snug ${
+                    compact ? 'mb-6' : 'mb-8'
+                  }`}
+                >
                   Services crafted <span className="text-gray-500">around you.</span>
                 </p>
 
-                <ol className="space-y-1.5">
+                <ol className={compact ? 'space-y-1' : 'space-y-1.5'}>
                   {services.map((s, i) => (
                     <li key={s.id}>
                       <button
@@ -220,7 +262,9 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                         data-name
                         onClick={() => jump(i)}
                         style={{ opacity: i === 0 ? 1 : 0.25 }}
-                        className="flex items-baseline gap-4 text-left font-bold text-3xl xl:text-5xl leading-[1.12] tracking-tight text-gray-900"
+                        className={`flex items-baseline gap-4 text-left font-bold leading-[1.12] tracking-tight text-gray-900 ${
+                          compact ? 'text-2xl xl:text-3xl' : 'text-3xl xl:text-5xl'
+                        }`}
                       >
                         <span className="font-mono text-xs text-gray-400 tracking-normal">{s.number}</span>
                         {s.title}
@@ -229,7 +273,7 @@ export function ServicesShowcase({ services = DEFAULT_SERVICES }: ServicesShowca
                   ))}
                 </ol>
 
-                <div className="mt-10 flex items-center gap-5">
+                <div className={`flex items-center gap-5 ${compact ? 'mt-7' : 'mt-10'}`}>
                   <span className="block h-[1em] overflow-hidden text-3xl font-bold leading-none text-gray-900">
                     <span data-count-col className="block">
                       {services.map((s) => (

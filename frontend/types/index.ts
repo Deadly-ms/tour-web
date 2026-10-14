@@ -114,3 +114,18 @@ export interface GalleryItem {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface DestinationItem {
+  id: string;
+  _id?: string;
+  name: string;
+  slug?: string;
+  tags: string[];
+  image: string;
+  href?: string;
+  order?: number;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+

@@ -353,6 +353,40 @@ export async function adminTogglePublish(
 }
 
 /**
+ * Admin: Toggle or set featured (curated on home) status
+ */
+export async function adminToggleFeatured(
+  id: string,
+  featured?: boolean,
+  token?: string | null
+): Promise<{ success: boolean; featured?: boolean; message?: string; error?: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/admin/tours/${id}/featured`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(featured !== undefined ? { featured } : {}),
+    });
+
+    const json = await res.json();
+    if (!res.ok) {
+      throw new Error(json.message || 'Failed to toggle featured status');
+    }
+
+    return {
+      success: true,
+      featured: json.featured,
+      message: json.message,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: (err as Error).message,
+    };
+  }
+}
+
+
+/**
  * Admin: Upload image file to Cloudinary
  */
 export async function adminUploadImage(

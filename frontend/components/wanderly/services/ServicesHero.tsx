@@ -23,7 +23,7 @@ export function ServicesHero({
   titleLine2 = "Nothing you don't.",
   subtitle = 'From planning to on-ground support, we take care of every detail so you can focus on what matters — experiencing the journey.',
   image = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80',
-  highlights = ['Private Tours', 'Custom Itineraries', 'Local Experiences'],
+  highlights = ['Student & School Tours', 'Corporate & Group Tours', 'Domestic & International'],
   ghostNumber = '01',
   ctaText = 'Contact Us',
   ctaHref = '/contact',
