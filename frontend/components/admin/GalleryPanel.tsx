@@ -57,7 +57,8 @@ export default function GalleryPanel({ onCountChange }: GalleryPanelProps) {
       const res = await adminListGallery(token);
       if (res.success) {
         setItems(res.data);
-        onCountChange?.(res.total);
+        const totalCount = typeof res.total === 'number' ? res.total : (res.count || res.data.length);
+        onCountChange?.(totalCount);
       } else {
         showToast(res.error || 'Failed to load gallery photos', 'error');
       }
@@ -77,7 +78,8 @@ export default function GalleryPanel({ onCountChange }: GalleryPanelProps) {
         const res = await adminListGallery(token);
         if (res.success && isMounted) {
           setItems(res.data);
-          onCountChange?.(res.total);
+          const totalCount = typeof res.total === 'number' ? res.total : (res.count || res.data.length);
+          onCountChange?.(totalCount);
         }
       } catch (err) {
         console.error('Error loading gallery on mount:', err);
@@ -139,10 +141,11 @@ export default function GalleryPanel({ onCountChange }: GalleryPanelProps) {
       const res = await adminDeleteGallery(id, token);
 
       if (res.success) {
-        setItems((prev) => prev.filter((it) => it.id !== id && it._id !== id));
+        const remaining = items.filter((it) => it.id !== id && it._id !== id);
+        setItems(remaining);
         showToast(res.message || 'Photo deleted from gallery', 'success');
         setItemToDelete(null);
-        onCountChange?.(items.length - 1);
+        onCountChange?.(remaining.length);
       } else {
         showToast(res.error || 'Failed to delete photo', 'error');
       }
@@ -221,7 +224,7 @@ export default function GalleryPanel({ onCountChange }: GalleryPanelProps) {
             <input
               type="text"
               placeholder="Search by title, caption, or category..."
-              value={search}
+              value={search || ''}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-black bg-white"
             />

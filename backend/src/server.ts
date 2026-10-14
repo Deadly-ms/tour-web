@@ -8,6 +8,9 @@ import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
 import { clerkMiddleware } from "@clerk/express";
 
+import dns from 'node:dns';
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const app: Application = express();
 
 // Middleware: CORS

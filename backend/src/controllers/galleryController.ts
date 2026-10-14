@@ -52,10 +52,14 @@ export const listAdminGallery = async (req: Request, res: Response): Promise<voi
     }
 
     const items = await Gallery.find(filter).sort({ displayOrder: 1, createdAt: -1 });
+    const total = await Gallery.countDocuments();
+    const published = await Gallery.countDocuments({ isPublished: true });
 
     res.status(200).json({
       success: true,
       count: items.length,
+      total,
+      published,
       data: items,
     });
   } catch (error) {

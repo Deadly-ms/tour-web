@@ -82,12 +82,22 @@ export async function adminListGallery(
       throw new Error(json.message || 'Failed to fetch admin gallery');
     }
 
+    const items = json.data || [];
+    const total =
+      typeof json.total === 'number'
+        ? json.total
+        : (typeof json.count === 'number' ? json.count : items.length);
+    const published =
+      typeof json.published === 'number'
+        ? json.published
+        : items.filter((it: GalleryItem) => it.isPublished !== false).length;
+
     return {
       success: true,
-      data: json.data || [],
-      count: json.count || 0,
-      total: json.total || 0,
-      published: json.published || 0,
+      data: items,
+      count: typeof json.count === 'number' ? json.count : items.length,
+      total,
+      published,
     };
   } catch (err) {
     console.error('adminListGallery error:', err);

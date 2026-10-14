@@ -197,7 +197,7 @@ function GalleryFormModalContent({
             </label>
             <input
               type="text"
-              value={title}
+              value={title || ''}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Golden Thar Dunes, Himalayan Stargazing"
               className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-white transition"
@@ -212,7 +212,7 @@ function GalleryFormModalContent({
             </label>
             <textarea
               rows={2}
-              value={caption}
+              value={caption || ''}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="A brief 1-2 sentence description of the location or experience..."
               className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-white transition resize-none"
@@ -256,11 +256,21 @@ function GalleryFormModalContent({
               </div>
             </div>
 
+            {/* Hidden file input always available for upload trigger */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+
             {imageInputMode === 'url' ? (
-              <div>
+              <div key="image-mode-url">
                 <input
+                  key="gallery-image-url-input"
                   type="url"
-                  value={imageUrl}
+                  value={imageUrl || ''}
                   onChange={(e) => {
                     setImageUrl(e.target.value);
                     setPreviewError(false);
@@ -270,14 +280,7 @@ function GalleryFormModalContent({
                 />
               </div>
             ) : (
-              <div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
+              <div key="image-mode-upload">
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -336,7 +339,7 @@ function GalleryFormModalContent({
               <div className="space-y-1.5">
                 <input
                   type="text"
-                  value={category}
+                  value={category || ''}
                   onChange={(e) => setCategory(e.target.value)}
                   placeholder="e.g. Desert, Mountains"
                   className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:border-black bg-white transition"
@@ -367,7 +370,7 @@ function GalleryFormModalContent({
               <input
                 type="number"
                 min="0"
-                value={displayOrder}
+                value={displayOrder ?? 0}
                 onChange={(e) => setDisplayOrder(parseInt(e.target.value) || 0)}
                 className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:border-black bg-white transition"
               />
